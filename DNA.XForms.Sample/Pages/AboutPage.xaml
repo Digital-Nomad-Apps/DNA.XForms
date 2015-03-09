@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+			 x:Class="DNA.XForms.Sample.AboutPage" 
+			 Title="About">
+	<ContentPage.Content>
+		<ScrollView>
+			<StackLayout Orientation="Vertical" Padding="0,20,0,8" >
+				<Image HorizontalOptions="Center" Source="dna_logo.png">
+					<Image.GestureRecognizers>
+						<TapGestureRecognizer Tapped="OnDnaLogoTapped" NumberOfTapsRequired="1" />
+					</Image.GestureRecognizers>
+				</Image>
+				<Label HorizontalOptions="Center">Welcome to the DNA.XForms Sample</Label>
+				<Label x:Name="DnaLabel" HorizontalOptions="Center" FontSize="Small">(c) Digital Nomad Apps Pty Ltd</Label>
+				<BoxView Color="Transparent" HeightRequest="40" />
+				<Label x:Name="TwitterLabel" HorizontalOptions="Center" FontSize="Small">Twitter: @teevus</Label>
+				<Label x:Name="LinkedInLabel" HorizontalOptions="Center" FontSize="Small">Linked In: mattdna</Label>
+			</StackLayout>
+		</ScrollView>
+	</ContentPage.Content>
+</ContentPage>

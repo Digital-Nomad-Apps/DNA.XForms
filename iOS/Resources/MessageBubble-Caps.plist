@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>cap-top</key>
+	<integer>0</integer>
+	<key>cap-left</key>
+	<integer>0</integer>
+	<key>cap-bottom</key>
+	<integer>0</integer>
+	<key>cap-right</key>
+	<integer>0</integer>
+	<key>padding-top</key>
+	<integer>0</integer>
+	<key>padding-left</key>
+	<integer>0</integer>
+	<key>padding-bottom</key>
+	<integer>0</integer>
+	<key>padding-right</key>
+	<integer>0</integer>
+</dict>
+</plist>
