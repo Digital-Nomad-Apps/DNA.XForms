@@ -59,6 +59,8 @@ namespace DNA.XForms.Sample.Pages
 				return new SpeechBubblePage ();
 			if (option is CappedImageMenuItem)
 				return new CappedImagePage ();
+			if (option is RoundedFrameMenuItem)
+				return new RoundedFramePage ();
 
 			throw new NotImplementedException("Unknown menu option: " + option.Title);
 		}

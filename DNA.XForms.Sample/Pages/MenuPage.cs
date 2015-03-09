@@ -22,6 +22,7 @@ namespace DNA.XForms.Sample
 			MenuItems.Add (new AboutMenuItem ());
 			MenuItems.Add (new CappedImageMenuItem ());
 			MenuItems.Add(new SpeechBubbleMenuItem());
+			MenuItems.Add(new RoundedFrameMenuItem());
 
 			BackgroundColor = ColorHelper.MenuBackgroundColor;
 
@@ -32,7 +33,12 @@ namespace DNA.XForms.Sample
 				Content = new Xamarin.Forms.Label {
 					TextColor = Color.White,
 					Text = "DNA.XForms Sample", 
-					Font = Font.SystemFontOfSize(NamedSize.Medium),
+					Font = Font.SystemFontOfSize (NamedSize.Medium),
+					/*
+					FontSize = headerFont.FontSize,
+					FontFamily = headerFont.FontFamily,
+					FontAttributes = headerFont.FontAttributes,
+					*/
 				}
 			};
 

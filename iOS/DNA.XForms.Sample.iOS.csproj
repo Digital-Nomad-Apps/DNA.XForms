@@ -126,6 +126,9 @@
     <BundleResource Include="Resources\info_icon.png" />
     <BundleResource Include="Resources\info_icon%402x.png" />
     <BundleResource Include="Resources\dna_logo%402x.png" />
+    <BundleResource Include="Resources\button_back%402x.png" />
+    <BundleResource Include="Resources\button_normal%402x.png" />
+    <BundleResource Include="Resources\photo_icon%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />

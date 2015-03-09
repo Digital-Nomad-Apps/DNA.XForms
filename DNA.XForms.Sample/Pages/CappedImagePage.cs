@@ -12,57 +12,41 @@ namespace DNA.XForms.Sample
 		{
 			this.Title = "Capped Image Sample";
 
-			// Dictionary to get Color from color name.
-			Dictionary<string, Color> NamedColors = new Dictionary<string, Color>
-			{
-				{ "None (Default)", Color.Default },
-				{ "Aqua", Color.Aqua }, 
-				{ "Black", Color.Black },
-				{ "Blue", Color.Blue }, 
-				{ "Gray", Color.Gray }, 
-				{ "Green", Color.Green },
-				{ "Lime", Color.Lime }, 
-				{ "Maroon", Color.Maroon },
-				{ "Navy", Color.Navy }, 
-				{ "Olive", Color.Olive },
-				{ "Purple", Color.Purple }, 
-				{ "Red", Color.Red },
-				{ "Silver", Color.Silver }, 
-				{ "Teal", Color.Teal },
-				{ "White", Color.White }, 
-				{ "Yellow", Color.Yellow }
+			Dictionary<string, Thickness> images = new Dictionary<string, Thickness> {
+				{ "MessageBubble.png", new Thickness (21d, 17d, 26.5d, 17.5d) },
+				{ "button_normal.png", new Thickness (6d, 6d, 6d, 6d) }, 
+				{ "button_back.png", new Thickness (13d, 2d, 6d, 2d) }, 
 			};
 
-			var caps = new Thickness (21d, 17d, 26.5d, 17.5d); 
-
-			var cappedImage = new CappedImage (@"MessageBubble.png", caps);
+			var cappedImage = new CappedImage (images.Last().Key, images.Last().Value);
 			cappedImage.HorizontalOptions = LayoutOptions.Start;
+
+			var imagePicker = new Picker {
+				Title = "Image",
+				HorizontalOptions = LayoutOptions.FillAndExpand,
+			};
+			foreach (var item in images) {
+				imagePicker.Items.Add (item.Key);
+			}
+			imagePicker.SelectedIndex = 2;
+			imagePicker.SelectedIndexChanged += (object sender, EventArgs e) => {
+				var selectedItem = imagePicker.Items[imagePicker.SelectedIndex];
+			
+				// Set these in a single call to prevent 2 layout calls (one of which will be a bit weird because the CapWidth won't match the ImageResource
+				cappedImage.SetImageAndCapWidth(selectedItem, images[selectedItem]);
+			};
 
 			var flipVerticallySwitch = new Switch { HorizontalOptions = LayoutOptions.End};
 			var flipHorizontallySwitch = new Switch { HorizontalOptions = LayoutOptions.End};
-			var colorPicker = new Picker { 
-				Title = "Color",
+			var colorPicker = new ColorPicker { 
 				HorizontalOptions = LayoutOptions.FillAndExpand
 			};
-			foreach (var item in NamedColors.Select (n => n.Key).ToList ()) {
-				colorPicker.Items.Add (item);
-			}
-			colorPicker.SelectedIndex = 0; // None (Default)
 
-			colorPicker.SelectedIndexChanged += (sender, args) =>
+
+			colorPicker.SelectedColorChanged += (sender, args) =>
 			{
-				if (colorPicker.SelectedIndex == -1)
-				{
-					cappedImage.TintColor = Color.Default;
-					colorPicker.BackgroundColor = Color.Default;
-				}
-				else
-				{
-					string colorName = colorPicker.Items[colorPicker.SelectedIndex];
-					var color = NamedColors[colorName];
-					cappedImage.TintColor = color;
-					colorPicker.BackgroundColor = color; 
-				}
+				cappedImage.TintColor = colorPicker.SelectedColor;
+				colorPicker.BackgroundColor = colorPicker.SelectedColor; 
 			};
 
 			var widthSlider = new Slider {
@@ -83,6 +67,7 @@ namespace DNA.XForms.Sample
 					Padding = new Thickness (8d, 8d, 8d, 8d),
 					Spacing = 8d,
 					Children = {
+						imagePicker,
 						new StackLayout {
 							Orientation = StackOrientation.Horizontal,
 							Spacing = 16,
@@ -95,7 +80,7 @@ namespace DNA.XForms.Sample
 							Orientation = StackOrientation.Horizontal,
 							Children = {
 								new Label {
-									Text = "Switch Vertically",
+									Text = "Flip Vertically",
 									HorizontalOptions = LayoutOptions.StartAndExpand,
 									YAlign = TextAlignment.Center
 								},
@@ -106,7 +91,7 @@ namespace DNA.XForms.Sample
 							Orientation = StackOrientation.Horizontal,
 							Children = {
 								new Label {
-									Text = "Switch Horizontally",
+									Text = "Flip Horizontally",
 									HorizontalOptions = LayoutOptions.StartAndExpand,
 									YAlign = TextAlignment.Center
 								},

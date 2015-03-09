@@ -20,13 +20,13 @@ namespace DNA.XForms
 
 		public string ImageResource {
 			get { return (string)base.GetValue (ImageResourceProperty); }
-			set { base.SetValue (ImageResourceProperty, value); }
+			private set { base.SetValue (ImageResourceProperty, value); }
 		}
 
 		// TODO: I'm not sure that Android supports setting this in code
 		public Thickness CapWidth {
 			get { return (Thickness)base.GetValue (CapWidthProperty); }
-			set { base.SetValue (CapWidthProperty, value); }
+			private set { base.SetValue (CapWidthProperty, value); }
 		}
 
 		public bool FlippedHorizontally {
@@ -48,6 +48,9 @@ namespace DNA.XForms
 			get { return this.CapWidth != new Thickness (-1d);}
 		}
 
+		// TODO: Make this internal and set internals visible to DNA.XForms.iOS
+		public bool LayoutPaused { get; private set;}
+
 		#endregion
 
 		public CappedImage (string imageResource) : this(imageResource, new Thickness(-1d))
@@ -60,6 +63,20 @@ namespace DNA.XForms
 			this.CapWidth = capWidth;
 			this.FlippedHorizontally = flipHorizontally;
 			this.FlippedVertically = flipVertically;
+		}
+
+		public void SetImageAndCapWidth(string imageResource, Thickness capWidth)
+		{
+			if (capWidth == this.CapWidth) {
+				// Only the image has changed - just go ahead and update it
+				this.ImageResource = imageResource;
+			} else {
+				this.LayoutPaused = true;  // Suspending layout until both are set
+				this.ImageResource = imageResource;  
+				this.LayoutPaused = false;
+				// CapWidth has changed, so this will cause it to re-render with the new image and cap width
+				this.CapWidth = capWidth;
+			}
 		}
 	}
 }

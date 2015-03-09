@@ -4,9 +4,9 @@ namespace DNA.XForms.Sample
 {
 	public struct ColorHelper
 	{
-		public static readonly ColorHelper MyBlue = 0x59759E;		//  Color.FromRgb (89, 117, 158); 
-		public static readonly ColorHelper MyLightBlue = 0x6fa8dc;	//  Color.FromRgb (89, 117, 158); 
-
+		public static readonly ColorHelper MyBlue = 0x59759E;			//  Color.FromRgb (89, 117, 158); 
+		public static readonly ColorHelper MyLightBlue = 0x6fa8dc;		//  Color.FromRgb (89, 117, 158); 
+		public static readonly ColorHelper MyLightGray = 0xB4BCBC;
 	
 		// Colors for specific purposes
 		public static readonly Xamarin.Forms.Color ToolbarBackground = MyBlue.ToFormsColor();

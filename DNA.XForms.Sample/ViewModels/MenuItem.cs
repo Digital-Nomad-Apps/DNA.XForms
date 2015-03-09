@@ -26,7 +26,13 @@ namespace DNA.XForms.Sample.ViewModels
 	public class CappedImageMenuItem : MenuItem 
 	{
 		public override string Title { get { return "Capped Image"; }}
-		public override string Icon { get { return "speechbubble_icon.png"; }}
+		public override string Icon { get { return "photo_icon.png"; }}
+	}
+
+	public class RoundedFrameMenuItem : MenuItem 
+	{
+		public override string Title { get { return "Rounded Frame"; }}
+		public override string Icon { get { return ""; }}
 	}
 }
 
