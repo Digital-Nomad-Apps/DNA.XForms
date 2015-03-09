@@ -11,35 +11,56 @@ namespace DNA.XForms.Sample
 			Title = "Rounded Frame Sample";
 			this.BackgroundColor = ColorHelper.MyLightGray.ToFormsColor();
 
-			var shadowSwitch = new Switch { IsToggled = true };
+			var shadowSwitch = new Switch { IsToggled = true, HorizontalOptions = LayoutOptions.EndAndExpand };
 
 			var originalFrame = new Frame { 
 				Content = new Label { Text = "This is a regular frame" },
-				BackgroundColor = Color.Red,
 			};
 
 			var roundedFrame = new RoundedFrame { 
-				BackgroundColor = Color.Red,
 				HasShadow = true,
 				Content = new Label { Text = "This is a rounded frame" } 
 			};
-			var cornerRadiusSlider = new Slider (0d, 100d, 5d);
+			var cornerRadiusSlider = new Slider (0d, 50d, 10d) { HorizontalOptions = LayoutOptions.EndAndExpand };
+			var outlineWidthSlider = new Slider (0d, 50d, 1d) { HorizontalOptions = LayoutOptions.EndAndExpand };
 
-			var colorPicker = new ColorPicker ();
+			var borderColorPicker = new ColorPicker { SelectedColor = Color.Default };
+			var outlineColorPicker = new ColorPicker { SelectedColor = Color.Default };
 
-			Content = new StackLayout { 
-				Padding = new Thickness(8d),
-				Spacing = 4d,
-				Children = {
-					originalFrame,
-					roundedFrame,
-					new BoxView { HeightRequest=16d, BackgroundColor=Color.Transparent },
-					new Label { Text = "Corner Radius" },
-					cornerRadiusSlider,
-					new Label { Text = "Shadows?" },
-					shadowSwitch,
-					new Label { Text = "Background Color" },
-					colorPicker,
+			Content = new ScrollView {
+				Content = new StackLayout { 
+					Padding = new Thickness(8d),
+					Spacing = 4d,
+					Children = {
+						originalFrame,
+						roundedFrame,
+						new BoxView { HeightRequest=16d, BackgroundColor=Color.Transparent },
+						new StackLayout { 
+							Orientation = StackOrientation.Horizontal,
+							Children = { 
+								new Label { Text = "Corner Radius", HorizontalOptions = LayoutOptions.Start },
+								cornerRadiusSlider,
+							},
+						},
+						new StackLayout { 
+							Orientation = StackOrientation.Horizontal,
+							Children = { 
+								new Label { Text = "Outline Width", HorizontalOptions = LayoutOptions.Start },
+								outlineWidthSlider,
+							},
+						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
+								new Label { Text = "Shadows?", HorizontalOptions = LayoutOptions.Start },
+								shadowSwitch,
+							},
+						},
+						new Label { Text = "Background Color" },
+						borderColorPicker,
+						new Label { Text = "Outline Color" },
+						outlineColorPicker,
+					}
 				}
 			};
 
@@ -48,8 +69,13 @@ namespace DNA.XForms.Sample
 			originalFrame.SetBinding(RoundedFrame.HasShadowProperty, new Binding("IsToggled", BindingMode.TwoWay, source:shadowSwitch));
 			roundedFrame.SetBinding(RoundedFrame.HasShadowProperty, new Binding("IsToggled", BindingMode.TwoWay, source:shadowSwitch));
 
-			originalFrame.SetBinding(Frame.BackgroundColorProperty, new Binding("SelectedColor", BindingMode.OneWay, source:colorPicker));
-			roundedFrame.SetBinding(Frame.BackgroundColorProperty, new Binding("SelectedColor", BindingMode.OneWay, source:colorPicker));
+			originalFrame.SetBinding(Frame.BackgroundColorProperty, new Binding("SelectedColor", BindingMode.OneWay, source:borderColorPicker));
+			roundedFrame.SetBinding(Frame.BackgroundColorProperty, new Binding("SelectedColor", BindingMode.OneWay, source:borderColorPicker));
+		
+			originalFrame.SetBinding(Frame.OutlineColorProperty, new Binding("SelectedColor", BindingMode.OneWay, source:outlineColorPicker));
+			roundedFrame.SetBinding(Frame.OutlineColorProperty, new Binding("SelectedColor", BindingMode.OneWay, source:outlineColorPicker));
+
+			roundedFrame.SetBinding(RoundedFrame.OutlineWidthProperty, new Binding("Value", BindingMode.TwoWay, source:outlineWidthSlider));
 		}
 	}
 }

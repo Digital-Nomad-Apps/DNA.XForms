@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Xamarin.Forms;
 
@@ -41,7 +42,11 @@ namespace DNA.XForms.Sample
 
 		public Color SelectedColor {
 			get { return (Color)base.GetValue (SelectedColorProperty); }
-			set { base.SetValue (SelectedColorProperty, value); }
+			set { 
+
+				this.SelectedIndex = this.Items.IndexOf (Colors.Where (c => c.Value == value).First ().Key);
+				base.SetValue (SelectedColorProperty, value); 
+			}
 		}
 
 		#endregion
