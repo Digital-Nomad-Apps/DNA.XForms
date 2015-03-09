@@ -10,6 +10,8 @@ namespace DNA.XForms.Sample
 	{
 		public CappedImagePage ()
 		{
+			this.Title = "Capped Image Sample";
+
 			// Dictionary to get Color from color name.
 			Dictionary<string, Color> NamedColors = new Dictionary<string, Color>
 			{
@@ -33,8 +35,8 @@ namespace DNA.XForms.Sample
 
 			var caps = new Thickness (21d, 17d, 26.5d, 17.5d); 
 
-			var image1 = new CappedImage (@"MessageBubble.png", caps);
-			var image2 = new CappedImage (@"MessageBubble.png", caps);
+			var cappedImage = new CappedImage (@"MessageBubble.png", caps);
+			cappedImage.HorizontalOptions = LayoutOptions.Start;
 
 			var flipVerticallySwitch = new Switch { HorizontalOptions = LayoutOptions.End};
 			var flipHorizontallySwitch = new Switch { HorizontalOptions = LayoutOptions.End};
@@ -45,56 +47,104 @@ namespace DNA.XForms.Sample
 			foreach (var item in NamedColors.Select (n => n.Key).ToList ()) {
 				colorPicker.Items.Add (item);
 			}
+			colorPicker.SelectedIndex = 0; // None (Default)
+
 			colorPicker.SelectedIndexChanged += (sender, args) =>
 			{
 				if (colorPicker.SelectedIndex == -1)
 				{
-					image2.TintColor = Color.Default;
+					cappedImage.TintColor = Color.Default;
 					colorPicker.BackgroundColor = Color.Default;
 				}
 				else
 				{
 					string colorName = colorPicker.Items[colorPicker.SelectedIndex];
 					var color = NamedColors[colorName];
-					image2.TintColor = color;
+					cappedImage.TintColor = color;
 					colorPicker.BackgroundColor = color; 
 				}
 			};
 
-
-			this.Content = new StackLayout() {
-				Padding = new Thickness(8d,8d,8d,8d),
-				Spacing = 8d,
-				Children = {
-					image1,
-					image2,
-					new StackLayout {
-						Orientation = StackOrientation.Horizontal,
-						Spacing = 16,
-						Children = {
-							new Label { Text = "Color", HorizontalOptions = LayoutOptions.Start, YAlign=TextAlignment.Center},
-							colorPicker,
-						},
-					},
-					new StackLayout {
-						Orientation = StackOrientation.Horizontal,
-						Children = {
-							new Label { Text = "Switch Vertically", HorizontalOptions = LayoutOptions.StartAndExpand, YAlign=TextAlignment.Center},
-							flipVerticallySwitch,
-						},
-					},
-					new StackLayout {
-						Orientation = StackOrientation.Horizontal,
-						Children = {
-							new Label { Text = "Switch Horizontally", HorizontalOptions = LayoutOptions.StartAndExpand, YAlign=TextAlignment.Center},
-							flipHorizontallySwitch,
-						},
-					}
-				},
+			var widthSlider = new Slider {
+				Minimum = 0d,
+				Maximum = Application.Current.MainPage.Width-20f,
+				Value = 100d,
+				HorizontalOptions = LayoutOptions.EndAndExpand,
+			};
+			var heightSlider = new Slider {
+				Minimum = 0d,
+				Maximum = Application.Current.MainPage.Height,
+				Value = 50d,
+				HorizontalOptions = LayoutOptions.EndAndExpand,
 			};
 
-			image2.SetBinding(CappedImage.FlippedHorizontallyProperty, new Binding("IsToggled", BindingMode.OneWay, source:flipHorizontallySwitch));
-			image2.SetBinding(CappedImage.FlippedVerticallyProperty, new Binding("IsToggled", BindingMode.OneWay, source:flipVerticallySwitch));
+			this.Content = new ScrollView {
+				Content = new StackLayout () {
+					Padding = new Thickness (8d, 8d, 8d, 8d),
+					Spacing = 8d,
+					Children = {
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Spacing = 16,
+							Children = {
+								new Label { Text = "Color", HorizontalOptions = LayoutOptions.Start, YAlign = TextAlignment.Center },
+								colorPicker,
+							},
+						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
+								new Label {
+									Text = "Switch Vertically",
+									HorizontalOptions = LayoutOptions.StartAndExpand,
+									YAlign = TextAlignment.Center
+								},
+								flipVerticallySwitch,
+							},
+						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
+								new Label {
+									Text = "Switch Horizontally",
+									HorizontalOptions = LayoutOptions.StartAndExpand,
+									YAlign = TextAlignment.Center
+								},
+								flipHorizontallySwitch,
+							},
+						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
+								new Label { Text = "Width", HorizontalOptions = LayoutOptions.StartAndExpand, YAlign = TextAlignment.Center },
+								widthSlider,
+							},
+						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
+								new Label { Text = "Height", HorizontalOptions = LayoutOptions.StartAndExpand, YAlign = TextAlignment.Center },
+								heightSlider,
+							},
+						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
+								cappedImage,
+								new BoxView {
+									HorizontalOptions = LayoutOptions.EndAndExpand,
+								},
+							}
+						}
+
+					},
+				}
+			};
+
+			cappedImage.SetBinding(CappedImage.FlippedHorizontallyProperty, new Binding("IsToggled", BindingMode.OneWay, source:flipHorizontallySwitch));
+			cappedImage.SetBinding(CappedImage.FlippedVerticallyProperty, new Binding("IsToggled", BindingMode.OneWay, source:flipVerticallySwitch));
+			cappedImage.SetBinding(CappedImage.WidthRequestProperty, new Binding("Value", BindingMode.TwoWay, source:widthSlider));
+			cappedImage.SetBinding(CappedImage.HeightRequestProperty, new Binding("Value", BindingMode.TwoWay, source:heightSlider));
 		}
 	}
 }
