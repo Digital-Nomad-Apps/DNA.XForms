@@ -34,27 +34,24 @@ namespace DNA.XForms.iOS.Views
 		/// <param name = "triangleWidth"></param>
 		public static void DrawSpeechBubbleAroundRect(CGRect rect, 
 			VectorSpeechBubble.ArrowDirections arrowDirection, 
-			UIColor borderColor = null, 
-			UIColor fillColor = null, 
-			UIColor gradientFillColor = null, 
-			float borderWidth = 1f,
-			float cornerRadius = 8f,
-			float arrowHeight = 12f,
-			float arrowWidth = 8f,
+			UIColor borderColor, 
+			UIColor fillColor, 
+			UIColor gradientFillColor, 
+			float borderWidth,
+			float cornerRadius = 16f,
+			float arrowHeight = 16f,
+			float arrowWidth = 12f,
 			float arrowOffset = 0f)
 		{
 			if (rect == CGRect.Empty)
 				return; // Nothing to draw here folks
 
+			Console.WriteLine("VectorSpeechBubbleUIView: DrawSpeechBubbleAroundRect");
+
 			bool useGradient = true;
 			if (fillColor == gradientFillColor || gradientFillColor == null) {
 				useGradient = false;
 			}
-
-			if (borderColor == null)
-				borderColor = UIColor.Black;
-			if (fillColor == null)
-				fillColor = UIColor.LightGray;
 
 			// Adjust the arrow offset to be within acceptable bounds
 			if (arrowOffset < cornerRadius) {
@@ -62,14 +59,21 @@ namespace DNA.XForms.iOS.Views
 				// don't start the arrow on the rounded part of the rounded rectangle
 			}
 
-			// Hide the arrow if there is not enough space to render it
+			// Reduce the border width if it is bigger than the width or the height of the control
+			// Strange things happen at the edge :)
+			if (borderWidth > (rect.Width / 2f))
+				borderWidth = (float)(rect.Width / 2f);
+			if (borderWidth > (rect.Height / 2f))
+				borderWidth = (float)(rect.Height / 2f);
+
+			// Reduce the arrow width if there is not enough space to render it
 			if (arrowDirection.IsLeft () || arrowDirection.IsRight ()) {
-				if (arrowWidth > (rect.Width - cornerRadius))
-					arrowDirection = VectorSpeechBubble.ArrowDirections.None;
+				if (arrowWidth > rect.Height)
+					arrowWidth = (float)rect.Height;
 			}
 			if (arrowDirection.IsUp () || arrowDirection.IsDown ()) {
-				if (arrowHeight > (rect.Height - cornerRadius))
-					arrowDirection = VectorSpeechBubble.ArrowDirections.None;
+				if (arrowHeight > rect.Width)
+					arrowWidth = (float)rect.Width;
 			}
 
 			using (var context = UIGraphics.GetCurrentContext ()) {
@@ -78,15 +82,96 @@ namespace DNA.XForms.iOS.Views
 				context.SetStrokeColor (borderColor.CGColor);	
 				context.SetFillColor (fillColor.CGColor);
 
+				bool hasUpArrow = arrowDirection.IsUp();
+				bool hasDownArrow = arrowDirection.IsDown();
+				bool hasLeftArrow = arrowDirection.IsLeft();
+				bool hasRightArrow = arrowDirection.IsRight();
+
+				context.SetLineJoin (CGLineJoin.Round);
+				context.SetLineWidth (borderWidth);
+				context.SetStrokeColor (borderColor.CGColor);	
+				context.SetFillColor (fillColor.CGColor);
+
 				var path = new CGPath ();
-				path.MoveToPoint (cornerRadius + borderWidth + 0.5f, borderWidth + arrowHeight + 0.5f);
-				path.AddLineToPoint ((nfloat)Math.Round(rect.Width / 2.0f - arrowWidth / 2.0f) + 0.5f, arrowHeight + borderWidth + 0.5f);
-				path.AddLineToPoint ((nfloat)Math.Round(rect.Width / 2.0f) + 0.5f, borderWidth + 0.5f);
-				path.AddLineToPoint ((nfloat)Math.Round(rect.Width / 2.0f + arrowWidth / 2.0f) + 0.5f, arrowHeight + borderWidth + 0.5f);
-				path.AddArcToPoint (rect.Width - borderWidth - 0.5f, borderWidth + arrowHeight + 0.5f, rect.Width - borderWidth - 0.5f, rect.Height - borderWidth - 0.5f, cornerRadius - borderWidth);
-				path.AddArcToPoint(rect.Width - borderWidth - 0.5f, rect.Height - borderWidth - 0.5f, (nfloat)Math.Round(rect.Width / 2.0f + arrowWidth / 2.0f) - borderWidth + 0.5f, rect.Height - borderWidth - 0.5f, cornerRadius - borderWidth);
-				path.AddArcToPoint (borderWidth + 0.5f, rect.Height - borderWidth - 0.5f, borderWidth + 0.5f, arrowWidth + borderWidth + 0.5f, cornerRadius - borderWidth);
-				path.AddArcToPoint(borderWidth + 0.5f, borderWidth + arrowHeight + 0.5f, rect.Width - borderWidth - 0.5f, arrowHeight + borderWidth + 0.5f, cornerRadius - borderWidth);
+
+				var midArrowWidth = arrowWidth / 2.0f;
+
+				var leftX = borderWidth + 0.5f;
+				if (hasLeftArrow)
+					leftX = leftX + arrowHeight;
+
+				var rightX = rect.Width - borderWidth - 0.5f;
+				if (hasRightArrow)
+					rightX = rightX - arrowHeight;
+
+				var topY = borderWidth + 0.5f;
+				if (hasUpArrow) {
+					topY = topY + arrowHeight;
+				}
+
+				var bottomY = rect.Height - borderWidth - 0.5f;
+				if (hasDownArrow) {
+					bottomY = bottomY - arrowHeight;
+				}
+
+				var midY = (nfloat)Math.Round ((topY + bottomY) / 2.0f) + 0.5f;
+				var midX = (nfloat)Math.Round ((leftX + rightX) / 2.0f) + 0.5f;
+
+				var effectiveCornerRadius = cornerRadius - borderWidth;
+				if (effectiveCornerRadius < 0f) {
+					effectiveCornerRadius = 0f;
+				}
+
+				// Starts at top left corner
+				path.MoveToPoint (leftX + effectiveCornerRadius, topY);
+
+				if (hasUpArrow) {
+					// Adds a line to where the arrow starts
+					path.AddLineToPoint ((nfloat)Math.Round(midX - midArrowWidth) + 0.5f, topY);
+					// Draws the arrow up, and then down again
+					path.AddLineToPoint (midX, borderWidth + 0.5f);
+					path.AddLineToPoint ((midX + midArrowWidth) + 0.5f, arrowHeight + borderWidth + 0.5f);
+				}
+
+				// Top right corner
+				path.AddArcToPoint (rightX, topY, rightX, bottomY, effectiveCornerRadius);
+
+				if (hasRightArrow) {
+					// Adds a line to where the arrow starts
+					path.AddLineToPoint (rightX, midY - midArrowWidth );
+					// Draws the arrow right, and then left again
+					path.AddLineToPoint (rightX + arrowHeight, midY);
+					path.AddLineToPoint (rightX, midY + midArrowWidth);
+				}
+
+				// To Bottom right corner (curling towards bottom left corner)
+				path.AddArcToPoint(rightX, bottomY, leftX, bottomY, effectiveCornerRadius);
+
+				if (hasDownArrow) {
+					// Adds a line to where the arrow starts
+					path.AddLineToPoint (midX + midArrowWidth, bottomY);
+
+					// Draws the arrow up, and then down again
+					path.AddLineToPoint (midX, bottomY + arrowHeight);
+					path.AddLineToPoint (midX - midArrowWidth, bottomY);
+				}
+
+				// To bottom left corner (curling up in direction of top left corner)
+				path.AddArcToPoint (leftX, bottomY, leftX, topY, effectiveCornerRadius);
+
+				if (hasLeftArrow) {
+					// Adds a line to where the arrow starts
+					path.AddLineToPoint (leftX, midY + midArrowWidth );
+					// Draws the arrow right, and then left again
+					path.AddLineToPoint (leftX - arrowHeight, midY);
+					path.AddLineToPoint (leftX, midY - midArrowWidth);
+				}
+
+				// To top left corner (curling in direction of top right corner)
+				path.AddArcToPoint(leftX, topY, rightX, topY, effectiveCornerRadius);
+
+
+
 				path.CloseSubpath ();
 
 				context.AddPath (path);
@@ -100,16 +185,17 @@ namespace DNA.XForms.iOS.Views
 							gradientFillColor.CGColor,
 							fillColor.CGColor,
 						});
-						
+
 						context.DrawLinearGradient (gradient, 
 							new CGPoint (path.BoundingBox.Left, path.BoundingBox.Top), 
 							new CGPoint (path.BoundingBox.GetMidX (), path.BoundingBox.Bottom), 
 							CGGradientDrawingOptions.DrawsBeforeStartLocation | CGGradientDrawingOptions.DrawsAfterEndLocation);
 
 					}
-						
+
 					context.AddPath (path);
 					context.DrawPath (CGPathDrawingMode.Stroke);
+
 				} else {
 					// Single color only 
 					context.DrawPath (CGPathDrawingMode.FillStroke);

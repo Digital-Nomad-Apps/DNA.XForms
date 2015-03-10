@@ -48,6 +48,7 @@
     <Folder Include="Renderer\" />
     <Folder Include="Helpers\" />
     <Folder Include="Views\" />
+    <Folder Include="Sketches\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,6 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="VectorSpeechBubbleSketch.sketchcs" />
+    <None Include="Sketches\VectorSpeechBubbleSketch.sketchcs" />
   </ItemGroup>
 </Project>
