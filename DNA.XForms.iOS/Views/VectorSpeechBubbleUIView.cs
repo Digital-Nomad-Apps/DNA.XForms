@@ -61,10 +61,10 @@ namespace DNA.XForms.iOS.Views
 
 			// Reduce the border width if it is bigger than the width or the height of the control
 			// Strange things happen at the edge :)
-			if (borderWidth > (rect.Width / 2f))
-				borderWidth = (float)(rect.Width / 2f);
-			if (borderWidth > (rect.Height / 2f))
-				borderWidth = (float)(rect.Height / 2f);
+			if (borderWidth > rect.Width)
+				borderWidth = (float)rect.Width;
+			if (borderWidth > rect.Height)
+				borderWidth = (float)rect.Height;
 
 			// Reduce the arrow width if there is not enough space to render it
 			if (arrowDirection.IsLeft () || arrowDirection.IsRight ()) {
@@ -77,10 +77,6 @@ namespace DNA.XForms.iOS.Views
 			}
 
 			using (var context = UIGraphics.GetCurrentContext ()) {
-				context.SetLineJoin (CGLineJoin.Round);
-				context.SetLineWidth (borderWidth);
-				context.SetStrokeColor (borderColor.CGColor);	
-				context.SetFillColor (fillColor.CGColor);
 
 				bool hasUpArrow = arrowDirection.IsUp();
 				bool hasDownArrow = arrowDirection.IsDown();
@@ -96,20 +92,20 @@ namespace DNA.XForms.iOS.Views
 
 				var midArrowWidth = arrowWidth / 2.0f;
 
-				var leftX = borderWidth + 0.5f;
+				var leftX = 0.5f;
 				if (hasLeftArrow)
 					leftX = leftX + arrowHeight;
 
-				var rightX = rect.Width - borderWidth - 0.5f;
+				float rightX = (float)Math.Round(rect.Width) - 0.5f;
 				if (hasRightArrow)
 					rightX = rightX - arrowHeight;
 
-				var topY = borderWidth + 0.5f;
+				var topY = 0.5f;
 				if (hasUpArrow) {
 					topY = topY + arrowHeight;
 				}
 
-				var bottomY = rect.Height - borderWidth - 0.5f;
+				float bottomY = (float)rect.Height - 0.5f;
 				if (hasDownArrow) {
 					bottomY = bottomY - arrowHeight;
 				}
@@ -117,24 +113,19 @@ namespace DNA.XForms.iOS.Views
 				var midY = (nfloat)Math.Round ((topY + bottomY) / 2.0f) + 0.5f;
 				var midX = (nfloat)Math.Round ((leftX + rightX) / 2.0f) + 0.5f;
 
-				var effectiveCornerRadius = cornerRadius - borderWidth;
-				if (effectiveCornerRadius < 0f) {
-					effectiveCornerRadius = 0f;
-				}
-
 				// Starts at top left corner
-				path.MoveToPoint (leftX + effectiveCornerRadius, topY);
+				path.MoveToPoint (leftX + cornerRadius, topY);
 
 				if (hasUpArrow) {
 					// Adds a line to where the arrow starts
 					path.AddLineToPoint ((nfloat)Math.Round(midX - midArrowWidth) + 0.5f, topY);
 					// Draws the arrow up, and then down again
-					path.AddLineToPoint (midX, borderWidth + 0.5f);
-					path.AddLineToPoint ((midX + midArrowWidth) + 0.5f, arrowHeight + borderWidth + 0.5f);
+					path.AddLineToPoint (midX,  0.5f);
+					path.AddLineToPoint ((midX + midArrowWidth) + 0.5f, arrowHeight + 0.5f);
 				}
 
 				// Top right corner
-				path.AddArcToPoint (rightX, topY, rightX, bottomY, effectiveCornerRadius);
+				path.AddArcToPoint (rightX, topY, rightX, bottomY, cornerRadius);
 
 				if (hasRightArrow) {
 					// Adds a line to where the arrow starts
@@ -145,7 +136,7 @@ namespace DNA.XForms.iOS.Views
 				}
 
 				// To Bottom right corner (curling towards bottom left corner)
-				path.AddArcToPoint(rightX, bottomY, leftX, bottomY, effectiveCornerRadius);
+				path.AddArcToPoint(rightX, bottomY, leftX, bottomY, cornerRadius);
 
 				if (hasDownArrow) {
 					// Adds a line to where the arrow starts
@@ -157,7 +148,7 @@ namespace DNA.XForms.iOS.Views
 				}
 
 				// To bottom left corner (curling up in direction of top left corner)
-				path.AddArcToPoint (leftX, bottomY, leftX, topY, effectiveCornerRadius);
+				path.AddArcToPoint (leftX, bottomY, leftX, topY, cornerRadius);
 
 				if (hasLeftArrow) {
 					// Adds a line to where the arrow starts
@@ -168,9 +159,7 @@ namespace DNA.XForms.iOS.Views
 				}
 
 				// To top left corner (curling in direction of top right corner)
-				path.AddArcToPoint(leftX, topY, rightX, topY, effectiveCornerRadius);
-
-
+				path.AddArcToPoint(leftX, topY, rightX, topY, cornerRadius);
 
 				path.CloseSubpath ();
 
@@ -197,6 +186,9 @@ namespace DNA.XForms.iOS.Views
 					context.DrawPath (CGPathDrawingMode.Stroke);
 
 				} else {
+					context.Clip ();
+					context.AddPath (path);
+
 					// Single color only 
 					context.DrawPath (CGPathDrawingMode.FillStroke);
 				}

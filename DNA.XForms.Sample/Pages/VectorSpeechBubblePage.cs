@@ -44,7 +44,7 @@ namespace DNA.XForms.Sample
 			var borderColorPicker = new ColorPicker () { HorizontalOptions = LayoutOptions.End, WidthRequest=150d };
 			borderColorPicker.SelectedColor = Color.Purple;
 
-			var borderWidthSlider = new Slider (0d, 40d, 4d) { HorizontalOptions = LayoutOptions.End, WidthRequest=150d };
+			var borderWidthSlider = new Slider (0d, 100d, 4d) { HorizontalOptions = LayoutOptions.End, WidthRequest=150d };
 
 			this.Content = new ScrollView {
 				Content = new StackLayout {
