@@ -16,6 +16,7 @@
 				<BoxView Color="Transparent" HeightRequest="40" />
 				<Label x:Name="TwitterLabel" HorizontalOptions="Center" FontSize="Small">Twitter: @teevus</Label>
 				<Label x:Name="LinkedInLabel" HorizontalOptions="Center" FontSize="Small">Linked In: mattdna</Label>
+				<Label x:Name="GithubLabel" HorizontalOptions="Center" FontSize="Small">Github: DNA.XForms</Label>
 			</StackLayout>
 		</ScrollView>
 	</ContentPage.Content>

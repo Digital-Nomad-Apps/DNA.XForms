@@ -54,7 +54,8 @@ namespace DNA.XForms.iOS.Renderer
 				e.PropertyName == VectorSpeechBubble.BorderWidthProperty.PropertyName ||
 				e.PropertyName == VectorSpeechBubble.FillColorProperty.PropertyName ||
 				e.PropertyName == VectorSpeechBubble.GradientFillColorProperty.PropertyName ||
-				e.PropertyName == View.BackgroundColorProperty.PropertyName) {
+				e.PropertyName == View.BackgroundColorProperty.PropertyName ||
+				e.PropertyName == VectorSpeechBubble.CornerRadiusProperty.PropertyName) {
 
 				var speechBubble = this.Element;
 				if (speechBubble != null) {
@@ -72,6 +73,7 @@ namespace DNA.XForms.iOS.Renderer
 			speechBubbleView.ArrowDirection = speechBubble.ArrowDirection;
 			speechBubbleView.BorderColor = speechBubble.BorderColor == Color.Default ? Color.Transparent.ToUIColor () : speechBubble.BorderColor.ToUIColor ();
 			speechBubbleView.BorderWidth = speechBubble.BorderColor == Color.Default ? 0f : (float)speechBubble.BorderWidth;
+			speechBubbleView.CornerRadius = (float)speechBubble.CornerRadius;
 			speechBubbleView.FillColor = speechBubble.FillColor == Color.Default ? UIColor.White : speechBubble.FillColor.ToUIColor ();
 			// Default the Gradient Fill color to the same as the fill color (i.e. meaning no gradient)
 			speechBubbleView.GradientFillColor = speechBubble.GradientFillColor == Color.Default ? speechBubbleView.FillColor : speechBubble.GradientFillColor.ToUIColor();

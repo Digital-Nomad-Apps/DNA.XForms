@@ -11,12 +11,13 @@ namespace DNA.XForms.iOS.Views
 		public UIColor GradientFillColor { get; set;}
 		public UIColor BorderColor { get; set;}
 		public float BorderWidth { get; set;}
+		public float CornerRadius {get;set;}
 
 		public override void Draw (CGRect rect)
 		{
 			base.Draw (rect);
 
-			DrawSpeechBubbleAroundRect (rect, this.ArrowDirection, this.BorderColor, this.FillColor, this.GradientFillColor, this.BorderWidth);
+			DrawSpeechBubbleAroundRect (rect, this.ArrowDirection, this.BorderColor, this.FillColor, this.GradientFillColor, this.BorderWidth, this.CornerRadius);
 		}
 
 
@@ -38,7 +39,7 @@ namespace DNA.XForms.iOS.Views
 			UIColor fillColor, 
 			UIColor gradientFillColor, 
 			float borderWidth,
-			float cornerRadius = 16f,
+			float cornerRadius,
 			float arrowHeight = 16f,
 			float arrowWidth = 12f,
 			float arrowOffset = 0f)

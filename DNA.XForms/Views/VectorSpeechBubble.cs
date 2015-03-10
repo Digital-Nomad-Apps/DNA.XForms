@@ -42,9 +42,12 @@ namespace DNA.XForms
 		public static readonly BindableProperty BorderColorProperty = BindableProperty.Create<VectorSpeechBubble, Color>(p => p.BorderColor, Color.Default);
 
 		public static readonly BindableProperty BorderWidthProperty = BindableProperty.Create<VectorSpeechBubble, double>(p => p.BorderWidth, 2d);
+		public static readonly BindableProperty CornerRadiusProperty = BindableProperty.Create<VectorSpeechBubble, double>(p => p.CornerRadius, 12d);
 
 		public static readonly BindableProperty TextProperty = BindableProperty.Create<VectorSpeechBubble, string>(p => p.Text, "");
 		public static readonly BindableProperty IsTypingProperty = BindableProperty.Create<VectorSpeechBubble, bool>(p => p.IsTyping, false);
+
+		public static readonly BindableProperty HasShadowProperty = BindableProperty.Create<VectorSpeechBubble, bool>(p => p.HasShadow, false);
 
 		public ArrowDirections ArrowDirection {
 			get { return (ArrowDirections)base.GetValue (ArrowDirectionProperty); } 
@@ -69,6 +72,11 @@ namespace DNA.XForms
 			set { base.SetValue (BorderWidthProperty, value); }
 		}
 
+		public double CornerRadius {
+			get { return (double)base.GetValue (CornerRadiusProperty); } 
+			set { base.SetValue (CornerRadiusProperty, value); }
+		}
+
 		/// <summary>
 		/// Allows specifying a secondary color for a gradient effect
 		/// // TODO: How to specify the path of the gradient
@@ -90,6 +98,11 @@ namespace DNA.XForms
 
 		public bool IsTyping {
 			get { return (bool)base.GetValue (IsTypingProperty); } 
+			set { base.SetValue (IsTypingProperty, value); }
+		}
+
+		public bool HasShadow {
+			get { return (bool)base.GetValue (HasShadowProperty); } 
 			set { base.SetValue (IsTypingProperty, value); }
 		}
 

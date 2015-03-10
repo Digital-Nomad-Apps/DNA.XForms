@@ -35,6 +35,10 @@ namespace DNA.XForms.Sample
 						originalFrame,
 						roundedFrame,
 						new BoxView { HeightRequest=16d, BackgroundColor=Color.Transparent },
+						new Label { Text = "Background Color" },
+						borderColorPicker,
+						new Label { Text = "Outline Color" },
+						outlineColorPicker,
 						new StackLayout { 
 							Orientation = StackOrientation.Horizontal,
 							Children = { 
@@ -56,10 +60,6 @@ namespace DNA.XForms.Sample
 								shadowSwitch,
 							},
 						},
-						new Label { Text = "Background Color" },
-						borderColorPicker,
-						new Label { Text = "Outline Color" },
-						outlineColorPicker,
 					}
 				}
 			};

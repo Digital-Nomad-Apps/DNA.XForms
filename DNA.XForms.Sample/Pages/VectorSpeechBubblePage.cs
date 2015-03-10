@@ -45,6 +45,7 @@ namespace DNA.XForms.Sample
 			borderColorPicker.SelectedColor = Color.Purple;
 
 			var borderWidthSlider = new Slider (0d, 100d, 4d) { HorizontalOptions = LayoutOptions.End, WidthRequest=150d };
+			var cornerRadiusSlider = new Slider (0d, 50d, 10d) { HorizontalOptions = LayoutOptions.EndAndExpand, WidthRequest=150d };
 
 			this.Content = new ScrollView {
 				Content = new StackLayout {
@@ -88,6 +89,13 @@ namespace DNA.XForms.Sample
 								borderWidthSlider,
 							}
 						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
+								new Label { Text = "Corner Radius", HorizontalOptions = LayoutOptions.FillAndExpand, YAlign = TextAlignment.Center },
+								cornerRadiusSlider,
+							}
+						},
 					},
 				}
 			};
@@ -96,6 +104,7 @@ namespace DNA.XForms.Sample
 			bubble.SetBinding(VectorSpeechBubble.GradientFillColorProperty, new Binding("SelectedColor", BindingMode.OneWay, source:gradientColorPicker));
 			bubble.SetBinding(VectorSpeechBubble.BorderColorProperty, new Binding("SelectedColor", BindingMode.OneWay, source:borderColorPicker));
 			bubble.SetBinding(VectorSpeechBubble.BorderWidthProperty, new Binding("Value", BindingMode.TwoWay, source:borderWidthSlider));
+			bubble.SetBinding(VectorSpeechBubble.CornerRadiusProperty, new Binding("Value", BindingMode.TwoWay, source:cornerRadiusSlider));
 		}
 	}
 }
