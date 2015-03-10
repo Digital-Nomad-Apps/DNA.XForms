@@ -68,7 +68,8 @@ namespace DNA.XForms.iOS
 					// g.DrawImage(rect, image);
 
 					g.SetFillColor (color.CGColor);
-					g.SetBlendMode(CGBlendMode.SourceAtop);
+					// g.SetBlendMode(CGBlendMode.SourceAtop);  // TODO: Testing different blend modes
+					g.SetBlendMode(CGBlendMode.Overlay);
 					g.FillRect(rect);
 
 					result = UIGraphics.GetImageFromCurrentImageContext();

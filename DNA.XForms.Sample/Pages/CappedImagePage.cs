@@ -13,7 +13,9 @@ namespace DNA.XForms.Sample
 			this.Title = "Capped Image Sample";
 
 			Dictionary<string, Thickness> images = new Dictionary<string, Thickness> {
-				{ "MessageBubble.png", new Thickness (21d, 17d, 26.5d, 17.5d) },
+				{ "speechbubble.png", new Thickness (21d, 17d, 26.5d, 17.5d) },
+				{ "speechbubble_fancy_green.png", new Thickness (21f, 14f, 21f, 14f) }, 
+				{ "speechbubble_fancy_gray.png", new Thickness (21f, 14f, 21f, 14f) }, 
 				{ "button_normal.png", new Thickness (6d, 6d, 6d, 6d) }, 
 				{ "button_back.png", new Thickness (13d, 2d, 6d, 2d) }, 
 			};

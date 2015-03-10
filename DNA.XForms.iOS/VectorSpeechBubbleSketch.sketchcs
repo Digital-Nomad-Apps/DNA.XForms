@@ -1,0 +1,147 @@
+﻿```xml
+<Manifest>
+  <AgentType>iOSUnified_UIKit</AgentType>
+  <Guid>1a33f099-93db-4e4c-91f5-d1ecc1dc4d26</Guid>
+  <Resources />
+</Manifest>
+```
+```csharp
+using UIKit;
+using Foundation;
+using CoreGraphics;
+
+UIGraphics.BeginImageContext(new CGSize(200,100));
+
+var borderWidth = 4f;
+var borderColor = UIColor.Black;
+	var fillColor = UIColor.Blue;
+	var gradientFillColor = UIColor.DarkGray;
+	var cornerRadius = 16f;
+	var arrowHeight = 24f;
+	var rect = new CGRect (0, 0, 200, 100);
+	var arrowWidth = 20f;
+	bool useGradient = true;
+
+	bool hasUpArrow = true;
+	bool hasDownArrow = true;
+	bool hasLeftArrow = false;
+	bool hasRightArrow = false;
+
+var context = UIGraphics.GetCurrentContext ();
+
+context.SetLineJoin (CGLineJoin.Round);
+context.SetLineWidth (borderWidth);
+context.SetStrokeColor (borderColor.CGColor);	
+context.SetFillColor (fillColor.CGColor);
+
+var path = new CGPath ();
+
+var midArrowWidth = arrowWidth / 2.0f;
+
+var leftX = borderWidth + 0.5f;
+if (hasLeftArrow)
+	leftX = leftX + arrowHeight;
+
+var rightX = rect.Width - borderWidth - 0.5f;
+if (hasRightArrow)
+	rightX = rightX - arrowHeight;
+
+var topY = borderWidth + 0.5f;
+if (hasUpArrow) {
+	topY = topY + arrowHeight;
+}
+
+var bottomY = rect.Height - borderWidth - 0.5f;
+if (hasDownArrow) {
+	bottomY = bottomY - arrowHeight;
+}
+
+var midY = (nfloat)Math.Round((topY + bottomY) / 2.0f) + 0.5f
+var midX = (nfloat)Math.Round((leftX + rightX) / 2.0f) + 0.5f
+
+var effectiveCornerRadius = cornerRadius - borderWidth;
+
+// Starts at top left corner
+path.MoveToPoint (leftX + effectiveCornerRadius, topY);
+
+if (hasUpArrow) {
+	// Adds a line to where the arrow starts
+	path.AddLineToPoint ((nfloat)Math.Round(midX - midArrowWidth) + 0.5f, topY);
+	// Draws the arrow up, and then down again
+	path.AddLineToPoint (midX, borderWidth + 0.5f);
+	path.AddLineToPoint ((midX + midArrowWidth) + 0.5f, arrowHeight + borderWidth + 0.5f);
+}
+	
+// Top right corner
+path.AddArcToPoint (rightX, topY, rightX, bottomY, effectiveCornerRadius);
+
+if (hasRightArrow) {
+	// Adds a line to where the arrow starts
+	path.AddLineToPoint (rightX, midY - midArrowWidth );
+	// Draws the arrow right, and then left again
+	path.AddLineToPoint (rightX + arrowHeight, midY);
+	path.AddLineToPoint (rightX, midY + midArrowWidth);
+}
+
+// To Bottom right corner (curling towards bottom left corner)
+path.AddArcToPoint(rightX, bottomY, leftX, bottomY, effectiveCornerRadius);
+
+if (hasDownArrow) {
+	// Adds a line to where the arrow starts
+	path.AddLineToPoint (midX + midArrowWidth, bottomY);
+
+	// Draws the arrow up, and then down again
+	path.AddLineToPoint (midX, bottomY + arrowHeight);
+	path.AddLineToPoint (midX - midArrowWidth, bottomY);
+}
+
+// To bottom left corner (curling up in direction of top left corner)
+path.AddArcToPoint (leftX, bottomY, leftX, topY, effectiveCornerRadius);
+
+if (hasLeftArrow) {
+	// Adds a line to where the arrow starts
+	path.AddLineToPoint (leftX, midY + midArrowWidth );
+	// Draws the arrow right, and then left again
+	path.AddLineToPoint (leftX - arrowHeight, midY);
+	path.AddLineToPoint (leftX, midY - midArrowWidth);
+}
+
+// To top left corner (curling in direction of top right corner)
+path.AddArcToPoint(leftX, topY, rightX, topY, effectiveCornerRadius);
+
+
+
+path.CloseSubpath ();
+
+context.AddPath (path);
+
+if (useGradient) {
+
+	context.Clip ();
+
+	using (var rgb = CGColorSpace.CreateDeviceRGB ()) {
+		CGGradient gradient = new CGGradient (rgb, new CGColor[] {
+			gradientFillColor.CGColor,
+			fillColor.CGColor,
+		});
+
+		context.DrawLinearGradient (gradient, 
+			new CGPoint (path.BoundingBox.Left, path.BoundingBox.Top), 
+			new CGPoint (path.BoundingBox.GetMidX (), path.BoundingBox.Bottom), 
+			CGGradientDrawingOptions.DrawsBeforeStartLocation | CGGradientDrawingOptions.DrawsAfterEndLocation);
+
+	}
+
+	context.AddPath (path);
+	context.DrawPath (CGPathDrawingMode.Stroke);
+
+} else {
+	// Single color only 
+	context.DrawPath (CGPathDrawingMode.FillStroke);
+}
+
+var image = UIGraphics.GetImageFromCurrentImageContext();
+	UIGraphics.EndImageContext();
+
+```
+

@@ -17,9 +17,9 @@ namespace DNA.XForms.Sample.ViewModels
 		public override string Icon { get { return "info_icon.png"; }}
 	}
 
-	public class SpeechBubbleMenuItem : MenuItem 
+	public class VectorSpeechBubbleMenuItem : MenuItem 
 	{
-		public override string Title { get { return "Speech Bubble"; }}
+		public override string Title { get { return "Vector Speech Bubble"; }}
 		public override string Icon { get { return "speechbubble_icon.png"; }}
 	}
 

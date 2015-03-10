@@ -55,8 +55,8 @@ namespace DNA.XForms.Sample.Pages
 		{
 			if (option is AboutMenuItem)
 				return new AboutPage ();
-			if (option is SpeechBubbleMenuItem)
-				return new SpeechBubblePage ();
+			if (option is VectorSpeechBubbleMenuItem)
+				return new VectorSpeechBubblePage ();
 			if (option is CappedImageMenuItem)
 				return new CappedImagePage ();
 			if (option is RoundedFrameMenuItem)

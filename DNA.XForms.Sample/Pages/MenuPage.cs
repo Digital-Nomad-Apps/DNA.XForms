@@ -21,7 +21,7 @@ namespace DNA.XForms.Sample
 		{
 			MenuItems.Add (new AboutMenuItem ());
 			MenuItems.Add (new CappedImageMenuItem ());
-			MenuItems.Add(new SpeechBubbleMenuItem());
+			MenuItems.Add(new VectorSpeechBubbleMenuItem());
 			MenuItems.Add(new RoundedFrameMenuItem());
 
 			BackgroundColor = ColorHelper.MenuBackgroundColor;
