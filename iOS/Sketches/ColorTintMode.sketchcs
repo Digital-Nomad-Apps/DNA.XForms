@@ -1,0 +1,91 @@
+﻿```xml
+<Manifest>
+  <AgentType>iOSUnified_UIKit</AgentType>
+  <Guid>8aac743e-1a4a-497d-a038-3260eae90291</Guid>
+  <Resources />
+</Manifest>
+```
+```csharp
+// Sketch your next great idea!
+using UIKit;
+using Foundation;
+using CoreGraphics;
+
+var color = UIColor.Orange;
+var image = new UIImage("/Users/matthewoleary 1/Projects/DNA.XForms/iOS/Resources/gradient_button.png");
+// var image = new UIImage("/Users/matthewoleary 1/Projects/DNA.XForms/iOS/Resources/speechbubble.png");
+
+
+UIGraphics.BeginImageContextWithOptions (image.Size, false, 0f);
+
+CGContext g = UIGraphics.GetCurrentContext ();
+var rect = new CGRect (location:CGPoint.Empty, size:image.Size);
+
+// g.DrawImage(rect, image.CGImage);
+image.Draw(rect);
+
+var coloredImage = UIGraphics.GetImageFromCurrentImageContext();
+
+// Original Method
+// image.Draw(rect);
+// g.DrawImage(rect, image);
+
+// g.SetFillColor (color.CGColor);
+// g.SetBlendMode(CGBlendMode.SourceAtop);  // TODO: Testing different blend modes
+// g.SetBlendMode(CGBlendMode.SourceAtop);
+// g.FillRect(rect);
+// var coloredImage = UIGraphics.GetImageFromCurrentImageContext();
+
+// From: http://stackoverflow.com/questions/3514066/how-to-tint-a-transparent-png-image-in-iphone
+// But its drawing upside down!
+
+
+
+// draw black background to preserve color of transparent pixels
+g.SetBlendMode(CGBlendMode.Normal);
+g.SetFillColor(UIColor.Black.CGColor);
+g.FillRect(rect);
+
+// draw original image
+g.SetBlendMode(CGBlendMode.Normal);
+image.Draw(rect);
+	// g.DrawImage(rect, image.CGImage);
+
+// tint image (loosing alpha) - the luminosity of the original image is preserved
+g.SetBlendMode(CGBlendMode.Color);
+g.SetFillColor(color.CGColor);
+g.FillRect(rect);
+
+// mask by alpha values of original image
+g.SetBlendMode(CGBlendMode.DestinationIn);
+image.Draw(rect);
+// g.DrawImage(rect, image.CGImage);
+
+var coloredImage = UIGraphics.GetImageFromCurrentImageContext();
+
+
+// This one is from here:
+// And https://robots.thoughtbot.com/designing-for-ios-blending-modes
+
+
+var tintColor = UIColor.Red;
+
+tintColor.SetFill();
+
+g.SetFillColor(tintColor.CGColor);
+g.FillRect(rect);
+
+g.SetBlendMode(CGBlendMode.Overlay);
+// g.DrawImage(rect, image.CGImage);
+image.Draw(rect, CGBlendMode.Overlay, alpha:1.0f);
+
+g.SetBlendMode(CGBlendMode.DestinationIn);
+// g.DrawImage(rect, image.CGImage);
+image.Draw(rect, CGBlendMode.DestinationIn, alpha:1.0f);
+var colorImage = UIGraphics.GetImageFromCurrentImageContext();
+
+UIGraphics.EndImageContext();
+
+
+```
+

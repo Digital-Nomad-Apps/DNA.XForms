@@ -55,7 +55,7 @@ namespace DNA.XForms.iOS.Renderer
 
 			var shadowView = new UIView ();
 			shadowView.Add (childView);
-			SetShadowPropertiesOnLayer (shadowView.Layer, roundedFrame.HasShadow);
+			shadowView.Layer.SetShadowPropertiesOnLayer(roundedFrame.HasShadow);
 
 			// Frame should be behind any of the Content views // MO: I'm not sure if this is working
 			this.SendSubviewToBack(shadowView);
@@ -68,22 +68,6 @@ namespace DNA.XForms.iOS.Renderer
 			}
 				
 			return shadowView;
-		}
-
-
-		private void SetShadowPropertiesOnLayer(CoreAnimation.CALayer layer, bool hasShadow) {
-			if (hasShadow) {
-				// TODO: Allow more customization of the shadow
-				layer.ShadowColor = UIColor.Black.CGColor;
-				layer.ShadowOffset = new System.Drawing.SizeF (0f, 0f);
-				layer.ShadowOpacity = 0.8f;
-				layer.ShadowRadius = 5f;
-			} else {
-				layer.ShadowColor = UIColor.Clear.CGColor;
-				layer.ShadowOffset = new System.Drawing.SizeF ();
-				layer.ShadowOpacity = 0f;
-				layer.ShadowRadius = 0f;
-			}
 		}
 
 		protected override void OnElementPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -106,9 +90,8 @@ namespace DNA.XForms.iOS.Renderer
 					childView.Layer.BorderWidth = (System.nfloat)roundedFrameElement.OutlineWidth;
 				}
 				if (e.PropertyName == RoundedFrame.HasShadowProperty.PropertyName)
-					SetShadowPropertiesOnLayer (this.Control.Layer, this.Element.HasShadow);
+					this.Control.Layer.SetShadowPropertiesOnLayer(this.Element.HasShadow);
 			}
 		}
 	}
 }
-

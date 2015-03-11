@@ -118,6 +118,12 @@ namespace DNA.XForms
 
 		#endregion
 
+		#region Events
+
+		public event EventHandler Tapped;
+
+		#endregion
+
 		/// <summary>
 		/// Creates a new SpeechBubble view
 		/// </summary>
@@ -125,6 +131,13 @@ namespace DNA.XForms
 		public VectorSpeechBubble (ArrowDirections arrowDirection = ArrowDirections.DownRight)
 		{
 			this.ArrowDirection = arrowDirection;
+
+			var tapGestureRecognizer = new TapGestureRecognizer ();
+			tapGestureRecognizer.Tapped += (sender, e) => {
+				if (this.Tapped != null)
+					this.Tapped(this, e);
+			};
+			this.GestureRecognizers.Add (tapGestureRecognizer);
 
 			this.SizeChanged += (object sender, EventArgs e) => {
 				System.Diagnostics.Debug.WriteLine ("SpeechBubbleView.SizeChanged: {0}", this.Bounds.Size);	

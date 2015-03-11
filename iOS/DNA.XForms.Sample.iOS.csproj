@@ -141,6 +141,7 @@
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <None Include="packages.config" />
+    <None Include="Sketches\ColorTintMode.sketchcs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -165,5 +166,8 @@
       <Project>{36D7E79D-1BCB-43F9-AC62-79168F10AFD3}</Project>
       <Name>DNA.XForms.iOS</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Sketches\" />
   </ItemGroup>
 </Project>

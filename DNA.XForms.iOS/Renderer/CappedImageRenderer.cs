@@ -23,6 +23,8 @@ namespace DNA.XForms.iOS.Renderer
 					var image = CreateUIImage(cappedImage);
 					var imageView = new UIImageView(image);
 
+					imageView.Layer.SetShadowPropertiesOnLayer(hasShadow:cappedImage.HasShadow);
+
 					SetNativeControl (imageView);
 				}
 				catch (Exception ex) {
@@ -36,9 +38,10 @@ namespace DNA.XForms.iOS.Renderer
 		}
 
 		private UIImage CreateUIImage(CappedImage cappedImage) {
-			return ImageHelper.CreateCappedUIImage (cappedImage.ImageResource, cappedImage.FlippedHorizontally, cappedImage.FlippedVertically, cappedImage.TintColor, cappedImage.CapWidth);
+			return ImageHelper.CreateCappedUIImage (cappedImage.ImageResource, cappedImage.FlippedHorizontally, cappedImage.FlippedVertically, cappedImage.TintColor, cappedImage.TintColorMode, cappedImage.CapWidth);
 		}
 
+		private bool _propertyChangeLayoutPending = false;
 		protected override void OnElementPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			base.OnElementPropertyChanged (sender, e);
@@ -48,14 +51,22 @@ namespace DNA.XForms.iOS.Renderer
 			        e.PropertyName == CappedImage.ImageResourceProperty.PropertyName ||
 			        e.PropertyName == CappedImage.FlippedHorizontallyProperty.PropertyName ||
 			        e.PropertyName == CappedImage.FlippedVerticallyProperty.PropertyName ||
-					e.PropertyName == CappedImage.TintColorProperty.PropertyName) {
+					e.PropertyName == CappedImage.TintColorProperty.PropertyName ||
+					e.PropertyName == CappedImage.TintColorModeProperty.PropertyName ||
+					e.PropertyName == CappedImage.LayoutPausedProperty.PropertyName ||
+					e.PropertyName == CappedImage.HasShadowProperty.PropertyName) {
 
 				var cappedImage = this.Element as CappedImage;
 				if (cappedImage != null) {
 				
-					if (cappedImage.LayoutPaused)
+					if (cappedImage.LayoutPaused) {
+						_propertyChangeLayoutPending = true;
 						return;
-
+					} else if (e.PropertyName == CappedImage.LayoutPausedProperty.PropertyName && !_propertyChangeLayoutPending) {
+						// LayoutPaused property has been set to true, but there are not layouts pending: can just exit
+						return;
+					}
+				
 					var image = CreateUIImage (cappedImage);
 					var imageView = this.Control;
 					if (imageView == null) {
@@ -64,7 +75,9 @@ namespace DNA.XForms.iOS.Renderer
 						imageView.Image = image;
 					}
 
+					imageView.Layer.SetShadowPropertiesOnLayer(hasShadow:cappedImage.HasShadow);
 
+					_propertyChangeLayoutPending = false;
 					SetNeedsDisplay ();
 				}
 			}

@@ -1,5 +1,4 @@
-﻿using System;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace DNA.XForms
 {
@@ -17,16 +16,21 @@ namespace DNA.XForms
 		public static readonly BindableProperty FlippedHorizontallyProperty = BindableProperty.Create<CappedImage, bool>(p => p.FlippedHorizontally, false);		
 		public static readonly BindableProperty FlippedVerticallyProperty = BindableProperty.Create<CappedImage, bool>(p => p.FlippedVertically, false);
 		public static readonly BindableProperty TintColorProperty = BindableProperty.Create<CappedImage, Color>(p => p.TintColor, Color.Default);
+		public static readonly BindableProperty TintColorModeProperty = BindableProperty.Create<CappedImage, TintColorModes>(p => p.TintColorMode, TintColorModes.Solid);
+		public static readonly BindableProperty HasShadowProperty = BindableProperty.Create<CappedImage, bool>(p => p.HasShadow, false);
+
+		// Making this a bindable property will fire off the relevant events to the Renderer when layout is resumed
+		public static readonly BindableProperty LayoutPausedProperty = BindableProperty.Create<CappedImage, bool>(p => p.LayoutPaused, false);
 
 		public string ImageResource {
 			get { return (string)base.GetValue (ImageResourceProperty); }
-			private set { base.SetValue (ImageResourceProperty, value); }
+			set { base.SetValue (ImageResourceProperty, value); }
 		}
 
 		// TODO: I'm not sure that Android supports setting this in code
 		public Thickness CapWidth {
 			get { return (Thickness)base.GetValue (CapWidthProperty); }
-			private set { base.SetValue (CapWidthProperty, value); }
+			set { base.SetValue (CapWidthProperty, value); }
 		}
 
 		public bool FlippedHorizontally {
@@ -39,17 +43,29 @@ namespace DNA.XForms
 			set { base.SetValue (FlippedVerticallyProperty, value); }
 		}
 
+		public bool HasShadow {
+			get { return (bool)base.GetValue (HasShadowProperty); }
+			set { base.SetValue (HasShadowProperty, value); }
+		}
+
 		public Color TintColor {
 			get { return (Color)base.GetValue (TintColorProperty); }
 			set { base.SetValue (TintColorProperty, value); }
 		}
 
+		public TintColorModes TintColorMode {
+			get { return (TintColorModes)base.GetValue (TintColorModeProperty); }
+			set { base.SetValue (TintColorModeProperty, value); }
+		}
+
 		public bool HasCapWidth {
 			get { return this.CapWidth != new Thickness (-1d);}
 		}
-
-		// TODO: Make this internal and set internals visible to DNA.XForms.iOS
-		public bool LayoutPaused { get; private set;}
+			
+		public bool LayoutPaused { 
+			get { return (bool)base.GetValue (LayoutPausedProperty); }
+			set { base.SetValue (LayoutPausedProperty, value); }
+		}
 
 		#endregion
 
@@ -63,20 +79,6 @@ namespace DNA.XForms
 			this.CapWidth = capWidth;
 			this.FlippedHorizontally = flipHorizontally;
 			this.FlippedVertically = flipVertically;
-		}
-
-		public void SetImageAndCapWidth(string imageResource, Thickness capWidth)
-		{
-			if (capWidth == this.CapWidth) {
-				// Only the image has changed - just go ahead and update it
-				this.ImageResource = imageResource;
-			} else {
-				this.LayoutPaused = true;  // Suspending layout until both are set
-				this.ImageResource = imageResource;  
-				this.LayoutPaused = false;
-				// CapWidth has changed, so this will cause it to re-render with the new image and cap width
-				this.CapWidth = capWidth;
-			}
 		}
 	}
 }

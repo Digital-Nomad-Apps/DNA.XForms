@@ -8,7 +8,7 @@ namespace DNA.XForms.iOS
 {
 	public static class ImageHelper
 	{
-		public static UIImage CreateCappedUIImage(string imageResource, bool flipHorizontally, bool flipVertically, Color tintColor, Thickness capWidth) {
+		public static UIImage CreateCappedUIImage(string imageResource, bool flipHorizontally, bool flipVertically, Color tintColor, TintColorModes mode, Thickness capWidth) {
 			Console.WriteLine ("Creating UIImage '{0}', FlipHorizontally={1}, FlipVertically={2}",
 				imageResource, flipHorizontally, flipVertically);
 
@@ -42,7 +42,7 @@ namespace DNA.XForms.iOS
 			}
 
 			if (tintColor != Color.Default) {
-				image = ApplyTintEffect (image, tintColor.ToUIColor ());
+				image = ApplyTintEffect (image, tintColor.ToUIColor (), mode);
 			}
 
 			if (!capWidth.IsNotSet())
@@ -54,7 +54,7 @@ namespace DNA.XForms.iOS
 			return image;
 		}
 
-		public static UIImage ApplyTintEffect (UIImage image, UIColor color)
+		public static UIImage ApplyTintEffect (UIImage image, UIColor color, TintColorModes mode)
 		{
 			UIGraphics.BeginImageContextWithOptions (image.Size, false, image.CurrentScale);
 
@@ -64,13 +64,33 @@ namespace DNA.XForms.iOS
 				using (CGContext g = UIGraphics.GetCurrentContext ()) {
 					var rect = new CGRect (location:CGPoint.Empty, size:image.Size);
 
-					image.Draw(rect);
-					// g.DrawImage(rect, image);
+					if (mode == TintColorModes.Solid) {
+						image.Draw(rect);
+						g.SetFillColor (color.CGColor);
+						g.SetBlendMode(CGBlendMode.SourceAtop);
+						g.FillRect(rect);
+					}
+					else if (mode == TintColorModes.Gradient) 
+					{
+						g.SetBlendMode(CGBlendMode.Normal);
+						g.SetFillColor(UIColor.Black.CGColor);
+						g.FillRect(rect);
 
-					g.SetFillColor (color.CGColor);
-					// g.SetBlendMode(CGBlendMode.SourceAtop);  // TODO: Testing different blend modes
-					g.SetBlendMode(CGBlendMode.Overlay);
-					g.FillRect(rect);
+						// draw original image
+						// g.SetBlendMode(CGBlendMode.Normal);
+						// g.DrawImage(rect, image.CGImage);
+						image.Draw(rect, CGBlendMode.Normal, 1f);
+
+						// tint image (losing alpha) - the luminosity of the original image is preserved
+						g.SetBlendMode(CGBlendMode.Color);
+						g.SetFillColor(color.CGColor);
+						g.FillRect(rect);
+
+						// mask by alpha values of original image
+						// g.SetBlendMode(CGBlendMode.DestinationIn);
+						// g.DrawImage(rect, image.CGImage);
+						image.Draw(rect, CGBlendMode.DestinationIn, 1f);
+					}
 
 					result = UIGraphics.GetImageFromCurrentImageContext();
 				}

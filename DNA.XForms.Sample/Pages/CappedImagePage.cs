@@ -34,8 +34,19 @@ namespace DNA.XForms.Sample
 			imagePicker.SelectedIndexChanged += (sender, e) => {
 				var selectedItem = imagePicker.Items[imagePicker.SelectedIndex];
 			
+
 				// Set these in a single call to prevent 2 layout calls (one of which will be a bit weird because the CapWidth won't match the ImageResource
-				cappedImage.SetImageAndCapWidth(selectedItem, images[selectedItem]);
+				cappedImage.LayoutPaused = true;
+				cappedImage.ImageResource = selectedItem;
+				cappedImage.CapWidth = images[selectedItem];
+
+				// Ensure we use the correct blend mode(s) for tinting
+				if (selectedItem == "speechbubble.png")
+					cappedImage.TintColorMode = TintColorModes.Solid;
+				else
+					cappedImage.TintColorMode = TintColorModes.Gradient;
+
+				cappedImage.LayoutPaused = false;
 			};
 
 			var flipVerticallySwitch = new Switch { HorizontalOptions = LayoutOptions.End};
@@ -43,7 +54,6 @@ namespace DNA.XForms.Sample
 			var colorPicker = new ColorPicker { 
 				HorizontalOptions = LayoutOptions.FillAndExpand
 			};
-
 
 			colorPicker.SelectedColorChanged += (sender, args) =>
 			{
@@ -63,6 +73,8 @@ namespace DNA.XForms.Sample
 				Value = 50d,
 				HorizontalOptions = LayoutOptions.EndAndExpand,
 			};
+
+			var hasShadowSwitch = new Switch { HorizontalOptions = LayoutOptions.End };
 
 			this.Content = new ScrollView {
 				Content = new StackLayout {
@@ -103,6 +115,17 @@ namespace DNA.XForms.Sample
 						new StackLayout {
 							Orientation = StackOrientation.Horizontal,
 							Children = {
+								new Label {
+									Text = "Has Shadow",
+									HorizontalOptions = LayoutOptions.StartAndExpand,
+									YAlign = TextAlignment.Center
+								},
+								hasShadowSwitch,
+							},
+						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
 								new Label { Text = "Width", HorizontalOptions = LayoutOptions.StartAndExpand, YAlign = TextAlignment.Center },
 								widthSlider,
 							},
@@ -123,13 +146,13 @@ namespace DNA.XForms.Sample
 								},
 							}
 						}
-
 					},
 				}
 			};
 
 			cappedImage.SetBinding(CappedImage.FlippedHorizontallyProperty, new Binding("IsToggled", BindingMode.OneWay, source:flipHorizontallySwitch));
 			cappedImage.SetBinding(CappedImage.FlippedVerticallyProperty, new Binding("IsToggled", BindingMode.OneWay, source:flipVerticallySwitch));
+			cappedImage.SetBinding(CappedImage.HasShadowProperty, new Binding("IsToggled", BindingMode.OneWay, source:hasShadowSwitch));
 			cappedImage.SetBinding(CappedImage.WidthRequestProperty, new Binding("Value", BindingMode.TwoWay, source:widthSlider));
 			cappedImage.SetBinding(CappedImage.HeightRequestProperty, new Binding("Value", BindingMode.TwoWay, source:heightSlider));
 		}

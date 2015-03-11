@@ -15,7 +15,7 @@ namespace DNA.XForms.Sample
 				ArrowDirection = VectorSpeechBubble.ArrowDirections.RightBottom,
 				BorderColor = Color.White,
 				BorderWidth = 4d,
-				Padding = new Thickness(8d,8d,8d,8d),	// TODO: Auto calculate padding based on the arrow direction and size.  This padding should be in addition to
+				// Padding = new Thickness(8d,8d,8d,8d),	// TODO: Auto calculate padding based on the arrow direction and size.  This padding should be in addition to
 				HasShadow = true,
 				HorizontalOptions = LayoutOptions.Start,
 				VerticalOptions = LayoutOptions.Start,
@@ -76,6 +76,20 @@ namespace DNA.XForms.Sample
 			var heightLabel = new Label { Style= sliderLabelStyle};			// new Label { Font = Font.SystemFontOfSize (NamedSize.Micro), YAlign = TextAlignment.Center };
 			var widthLabel = new Label { Style= sliderLabelStyle};	// new Label { Font = Font.SystemFontOfSize (NamedSize.Micro), YAlign = TextAlignment.Center };
 
+			var textEntry = new Entry {
+				Keyboard = Keyboard.Chat,
+				Placeholder = "Set bubble text",
+			};
+
+			/*
+			bubble.Tapped += (sender, e) => {
+				textEntry.Focus(); // Focus on the text entry displays the keyboard
+			};
+			*/
+
+			textEntry.Completed += (sender, e) => {
+				bubble.Text = textEntry.Text;
+			};
 
 			this.Content = new ScrollView {
 				Content = new StackLayout {
@@ -150,6 +164,7 @@ namespace DNA.XForms.Sample
 							}
 						},
 						new BoxView { HeightRequest = 20d }, // For some additional spacing
+						textEntry,
 						bubble,
 					},
 				}
