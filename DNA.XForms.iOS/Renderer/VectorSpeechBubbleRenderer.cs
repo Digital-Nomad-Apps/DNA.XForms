@@ -48,25 +48,31 @@ namespace DNA.XForms.iOS.Renderer
 		{
 			base.OnElementPropertyChanged (sender, e);
 
-			// If any properties that affect the display are changed, we need to re-render
-			if (e.PropertyName == VectorSpeechBubble.ArrowDirectionProperty.PropertyName ||
-				e.PropertyName == VectorSpeechBubble.BorderColorProperty.PropertyName ||
-				e.PropertyName == VectorSpeechBubble.BorderWidthProperty.PropertyName ||
-				e.PropertyName == VectorSpeechBubble.FillColorProperty.PropertyName ||
-				e.PropertyName == VectorSpeechBubble.GradientFillColorProperty.PropertyName ||
-				e.PropertyName == View.BackgroundColorProperty.PropertyName ||
-				e.PropertyName == VectorSpeechBubble.CornerRadiusProperty.PropertyName ||
-				e.PropertyName == View.WidthProperty.PropertyName || 
-				e.PropertyName == View.HeightProperty.PropertyName) {
+			var speechBubble = this.Element;
+			if (speechBubble != null) {
 
-				var speechBubble = this.Element;
-				if (speechBubble != null) {
-			
+				Console.WriteLine ("SpeechBubbleViewRenderer.OnElementPropertyChanged({0})", e.PropertyName);
+
+				// If any properties that affect the display are changed, we need to re-render
+				if (e.PropertyName == VectorSpeechBubble.ArrowDirectionProperty.PropertyName ||
+				   e.PropertyName == VectorSpeechBubble.BorderColorProperty.PropertyName ||
+				   e.PropertyName == VectorSpeechBubble.BorderWidthProperty.PropertyName ||
+				   e.PropertyName == VectorSpeechBubble.FillColorProperty.PropertyName ||
+				   e.PropertyName == VectorSpeechBubble.GradientFillColorProperty.PropertyName ||
+				   e.PropertyName == View.BackgroundColorProperty.PropertyName ||
+				   e.PropertyName == View.WidthProperty.PropertyName ||
+				   e.PropertyName == View.HeightProperty.PropertyName ||
+				   e.PropertyName == VectorSpeechBubble.CornerRadiusProperty.PropertyName) {
+
+
 					Console.WriteLine ("SpeechBubbleViewRenderer.OnElementPropertyChanged({0})", e.PropertyName);
 
 					// Update properties on the UIView and force it to redraw
 					SetViewProperties (speechBubble);
 					speechBubbleView.SetNeedsDisplay ();
+				}
+				if (e.PropertyName == VectorSpeechBubble.HasShadowProperty.PropertyName) {
+					SetShadowPropertiesOnLayer (speechBubbleView.Layer, speechBubble.HasShadow);
 				}
 			}
 		}
@@ -85,6 +91,21 @@ namespace DNA.XForms.iOS.Renderer
 			}
 			else {
 				speechBubbleView.BackgroundColor = speechBubble.BackgroundColor.ToUIColor();
+			}
+		}
+
+		private void SetShadowPropertiesOnLayer(CoreAnimation.CALayer layer, bool hasShadow) {
+			if (hasShadow) {
+				// TODO: Allow more customization of the shadow
+				layer.ShadowColor = UIColor.Black.CGColor;
+				layer.ShadowOffset = new System.Drawing.SizeF (0f, 0f);
+				layer.ShadowOpacity = 0.8f;
+				layer.ShadowRadius = 5f;
+			} else {
+				layer.ShadowColor = UIColor.Clear.CGColor;
+				layer.ShadowOffset = new System.Drawing.SizeF ();
+				layer.ShadowOpacity = 0f;
+				layer.ShadowRadius = 0f;
 			}
 		}
 	}

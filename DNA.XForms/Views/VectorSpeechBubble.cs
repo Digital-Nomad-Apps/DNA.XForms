@@ -91,6 +91,16 @@ namespace DNA.XForms
 			set { base.SetValue (BorderColorProperty, value); }
 		}
 
+		/// <summary>
+		/// The text to display in the Speech Bubble
+		/// </summary>
+		/// <remarks>
+		/// The text will inserted into a Label control within the Speech Bubble view.  
+		/// If the Content is not set, a new Label control is created
+		/// If the Content is set to a Label, this label will be populated with the text.
+		/// For more advanced customization of the contents, do not set the Text property on the Speech Bubble, 
+		/// instead set the Contents of the Content property to whatever controls you want to use
+		/// </remarks>
 		public string Text {
 			get { return (string)base.GetValue (TextProperty); } 
 			set { base.SetValue (TextProperty, value); }
@@ -132,7 +142,7 @@ namespace DNA.XForms
 			if (propertyName == TextProperty.PropertyName) {
 				if (this.Content == null) {
 					if (!string.IsNullOrEmpty (this.Text)) {
-						this.Content = new Label();
+						this.Content = new Label () { Text = this.Text };
 					}
 				}
 				if (this.Content is Label) {

@@ -15,7 +15,7 @@ namespace DNA.XForms.Sample
 				ArrowDirection = VectorSpeechBubble.ArrowDirections.RightBottom,
 				BorderColor = Color.White,
 				BorderWidth = 4d,
-				Padding = new Thickness(20,20,20,20),	// TODO: Auto calculate padding based on the arrow direction and size.  This padding should be in addition to
+				Padding = new Thickness(8d,8d,8d,8d),	// TODO: Auto calculate padding based on the arrow direction and size.  This padding should be in addition to
 				HasShadow = true,
 				HorizontalOptions = LayoutOptions.Start,
 				VerticalOptions = LayoutOptions.Start,
@@ -35,6 +35,8 @@ namespace DNA.XForms.Sample
 				var direction = (VectorSpeechBubble.ArrowDirections)System.Enum.Parse(typeof(VectorSpeechBubble.ArrowDirections), selectedValue);
 				bubble.ArrowDirection = direction;
 			};
+
+			var shadowSwitch = new Switch() { HorizontalOptions = LayoutOptions.End, WidthRequest=150d };
 
 			var fillColorPicker = new ColorPicker () { HorizontalOptions = LayoutOptions.End, WidthRequest=150d };
 			fillColorPicker.SelectedColor = Color.Silver;
@@ -73,6 +75,13 @@ namespace DNA.XForms.Sample
 							Children = {
 								new Label { Text = "Arrow Direction", HorizontalOptions = LayoutOptions.FillAndExpand, YAlign = TextAlignment.Center },
 								arrowDirectionPicker,
+							}
+						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
+								new Label { Text = "Has Shadow", HorizontalOptions = LayoutOptions.FillAndExpand, YAlign = TextAlignment.Center },
+								shadowSwitch,
 							}
 						},
 						new StackLayout {
@@ -138,6 +147,7 @@ namespace DNA.XForms.Sample
 		
 			bubble.SetBinding(VectorSpeechBubble.WidthRequestProperty, new Binding("Value", BindingMode.TwoWay, source:widthSlider));
 			bubble.SetBinding(VectorSpeechBubble.HeightRequestProperty, new Binding("Value", BindingMode.TwoWay, source:heightSlider));
+			bubble.SetBinding(VectorSpeechBubble.HasShadowProperty, new Binding("IsToggled", BindingMode.TwoWay, source:shadowSwitch));
 		}
 	}
 }
