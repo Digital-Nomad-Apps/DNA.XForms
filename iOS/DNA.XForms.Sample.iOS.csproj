@@ -133,6 +133,8 @@
     <BundleResource Include="Resources\speechBubble_fancy_green%402x.png" />
     <BundleResource Include="Resources\speechBubble_fancy_gray.png" />
     <BundleResource Include="Resources\speechBubble_fancy_gray%402x.png" />
+    <BundleResource Include="Resources\vector_bubble_icon%402x.png" />
+    <BundleResource Include="Resources\frame_icon%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />

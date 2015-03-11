@@ -76,21 +76,6 @@ namespace DNA.XForms.Sample
 			var heightLabel = new Label { Style= sliderLabelStyle};			// new Label { Font = Font.SystemFontOfSize (NamedSize.Micro), YAlign = TextAlignment.Center };
 			var widthLabel = new Label { Style= sliderLabelStyle};	// new Label { Font = Font.SystemFontOfSize (NamedSize.Micro), YAlign = TextAlignment.Center };
 
-			var textEntry = new Entry {
-				Keyboard = Keyboard.Chat,
-				Placeholder = "Set bubble text",
-			};
-
-			/*
-			bubble.Tapped += (sender, e) => {
-				textEntry.Focus(); // Focus on the text entry displays the keyboard
-			};
-			*/
-
-			textEntry.Completed += (sender, e) => {
-				bubble.Text = textEntry.Text;
-			};
-
 			this.Content = new ScrollView {
 				Content = new StackLayout {
 					Padding = new Thickness(4d,4d,4d,4d),
@@ -163,8 +148,7 @@ namespace DNA.XForms.Sample
 								heightSlider,
 							}
 						},
-						new BoxView { HeightRequest = 20d }, // For some additional spacing
-						textEntry,
+						new BoxView { HeightRequest = 12d }, // For some additional spacing
 						bubble,
 					},
 				}

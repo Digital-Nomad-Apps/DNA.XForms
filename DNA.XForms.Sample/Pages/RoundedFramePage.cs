@@ -19,9 +19,10 @@ namespace DNA.XForms.Sample
 
 			var roundedFrame = new RoundedFrame { 
 				HasShadow = true,
-				Content = new Label { Text = "This is a rounded frame" } 
+				Content = new Label { Text = "This is a rounded frame" },
+				CornerRadius = 24d
 			};
-			var cornerRadiusSlider = new Slider (0d, 50d, 10d) { HorizontalOptions = LayoutOptions.EndAndExpand };
+			var cornerRadiusSlider = new Slider (0d, 50d, 24d) { HorizontalOptions = LayoutOptions.EndAndExpand };
 			var outlineWidthSlider = new Slider (0d, 50d, 1d) { HorizontalOptions = LayoutOptions.EndAndExpand };
 
 			var borderColorPicker = new ColorPicker { SelectedColor = Color.Default };

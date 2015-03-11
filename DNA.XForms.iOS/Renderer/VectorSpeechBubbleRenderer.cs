@@ -62,7 +62,8 @@ namespace DNA.XForms.iOS.Renderer
 				   e.PropertyName == View.BackgroundColorProperty.PropertyName ||
 				   e.PropertyName == View.WidthProperty.PropertyName ||
 				   e.PropertyName == View.HeightProperty.PropertyName ||
-				   e.PropertyName == VectorSpeechBubble.CornerRadiusProperty.PropertyName) {
+				   e.PropertyName == VectorSpeechBubble.CornerRadiusProperty.PropertyName ||
+				   e.PropertyName == VectorSpeechBubble.TextProperty.PropertyName) {
 
 
 					Console.WriteLine ("SpeechBubbleViewRenderer.OnElementPropertyChanged({0})", e.PropertyName);

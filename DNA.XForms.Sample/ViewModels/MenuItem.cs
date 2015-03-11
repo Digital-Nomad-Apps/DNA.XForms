@@ -1,4 +1,5 @@
 ﻿using Xamarin.Forms;
+using System.Collections.Generic;
 
 namespace DNA.XForms.Sample.ViewModels
 {
@@ -9,6 +10,16 @@ namespace DNA.XForms.Sample.ViewModels
 		public virtual bool Selected { get; set; }
 		public virtual string Icon { get { return ""; } }
 		public ImageSource IconSource { get { return ImageSource.FromFile(Icon); } }
+	
+		public static IEnumerable<MenuItem> All() {
+			return new List<MenuItem> {
+				new AboutMenuItem (),
+				new CappedImageMenuItem (),
+				new VectorSpeechBubbleMenuItem(),
+				new RoundedFrameMenuItem(),
+				new ChatSampleMenuItem(),
+			};
+		}
 	}
 
 	public class AboutMenuItem : MenuItem 
@@ -20,7 +31,7 @@ namespace DNA.XForms.Sample.ViewModels
 	public class VectorSpeechBubbleMenuItem : MenuItem 
 	{
 		public override string Title { get { return "Vector Speech Bubble"; }}
-		public override string Icon { get { return "speechbubble_icon.png"; }}
+		public override string Icon { get { return "vector_bubble_icon.png"; }}
 	}
 
 	public class CappedImageMenuItem : MenuItem 
@@ -32,7 +43,13 @@ namespace DNA.XForms.Sample.ViewModels
 	public class RoundedFrameMenuItem : MenuItem 
 	{
 		public override string Title { get { return "Rounded Frame"; }}
-		public override string Icon { get { return ""; }}
+		public override string Icon { get { return "frame_icon.png"; }}
+	}
+
+	public class ChatSampleMenuItem : MenuItem
+	{
+		public override string Title { get { return "Chat Sample"; }}
+		public override string Icon { get { return "speechbubble_icon.png"; }}
 	}
 }
 

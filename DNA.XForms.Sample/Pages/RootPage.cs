@@ -61,6 +61,8 @@ namespace DNA.XForms.Sample.Pages
 				return new CappedImagePage ();
 			if (option is RoundedFrameMenuItem)
 				return new RoundedFramePage ();
+			if (option is ChatSampleMenuItem)
+				return new ChatPage ();
 
 			throw new NotImplementedException("Unknown menu option: " + option.Title);
 		}

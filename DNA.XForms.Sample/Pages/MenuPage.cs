@@ -1,28 +1,18 @@
-﻿using System;
-using Xamarin.Forms;
-using System.Collections.ObjectModel;
-using System.Collections;
+﻿using Xamarin.Forms;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Diagnostics;
-using DNA.XForms.Sample.ViewModels;
 
 namespace DNA.XForms.Sample
 {
 
 	public class MenuPage : ContentPage
 	{
-		readonly List<DNA.XForms.Sample.ViewModels.MenuItem> MenuItems = new List<DNA.XForms.Sample.ViewModels.MenuItem>();
+		readonly List<ViewModels.MenuItem> MenuItems = new List<ViewModels.MenuItem>();
 
 		public ListView Menu { get; set; }
 
 		public MenuPage ()
 		{
-			MenuItems.Add (new AboutMenuItem ());
-			MenuItems.Add (new CappedImageMenuItem ());
-			MenuItems.Add(new VectorSpeechBubbleMenuItem());
-			MenuItems.Add(new RoundedFrameMenuItem());
+			MenuItems.AddRange (ViewModels.MenuItem.All());
 
 			BackgroundColor = ColorHelper.MenuBackgroundColor;
 
@@ -34,11 +24,6 @@ namespace DNA.XForms.Sample
 					TextColor = Color.White,
 					Text = "DNA.XForms Sample", 
 					Font = Font.SystemFontOfSize (NamedSize.Medium),
-					/*
-					FontSize = headerFont.FontSize,
-					FontFamily = headerFont.FontFamily,
-					FontAttributes = headerFont.FontAttributes,
-					*/
 				}
 			};
 
