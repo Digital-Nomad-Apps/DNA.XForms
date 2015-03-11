@@ -65,6 +65,18 @@ namespace DNA.XForms.Sample
 				WidthRequest = 150d,
 			};
 
+			var sliderLabelStyle = new Style (typeof(Label)) {
+				Setters = {
+					new Setter {Property=Label.FontProperty, Value= Font.SystemFontOfSize (NamedSize.Micro)},
+					new Setter {Property=Label.YAlignProperty, Value=TextAlignment.Center},
+				},
+			};
+			var borderWidthLabel = new Label { Style= sliderLabelStyle};
+			var cornerRadiusLabel = new Label { Style= sliderLabelStyle};	// new Label { Font = Font.SystemFontOfSize (NamedSize.Micro), YAlign = TextAlignment.Center };
+			var heightLabel = new Label { Style= sliderLabelStyle};			// new Label { Font = Font.SystemFontOfSize (NamedSize.Micro), YAlign = TextAlignment.Center };
+			var widthLabel = new Label { Style= sliderLabelStyle};	// new Label { Font = Font.SystemFontOfSize (NamedSize.Micro), YAlign = TextAlignment.Center };
+
+
 			this.Content = new ScrollView {
 				Content = new StackLayout {
 					Padding = new Thickness(4d,4d,4d,4d),
@@ -109,6 +121,7 @@ namespace DNA.XForms.Sample
 							Orientation = StackOrientation.Horizontal,
 							Children = {
 								new Label { Text = "Border Width", HorizontalOptions = LayoutOptions.FillAndExpand, YAlign = TextAlignment.Center },
+								borderWidthLabel,
 								borderWidthSlider,
 							}
 						},
@@ -116,6 +129,7 @@ namespace DNA.XForms.Sample
 							Orientation = StackOrientation.Horizontal,
 							Children = {
 								new Label { Text = "Corner Radius", HorizontalOptions = LayoutOptions.FillAndExpand, YAlign = TextAlignment.Center },
+								cornerRadiusLabel,
 								cornerRadiusSlider,
 							}
 						},
@@ -123,6 +137,7 @@ namespace DNA.XForms.Sample
 							Orientation = StackOrientation.Horizontal,
 							Children = {
 								new Label { Text = "Width", HorizontalOptions = LayoutOptions.FillAndExpand, YAlign = TextAlignment.Center },
+								widthLabel,
 								widthSlider,
 							}
 						},
@@ -130,6 +145,7 @@ namespace DNA.XForms.Sample
 							Orientation = StackOrientation.Horizontal,
 							Children = {
 								new Label { Text = "Height", HorizontalOptions = LayoutOptions.FillAndExpand, YAlign = TextAlignment.Center },
+								heightLabel,
 								heightSlider,
 							}
 						},
@@ -148,6 +164,11 @@ namespace DNA.XForms.Sample
 			bubble.SetBinding(VectorSpeechBubble.WidthRequestProperty, new Binding("Value", BindingMode.TwoWay, source:widthSlider));
 			bubble.SetBinding(VectorSpeechBubble.HeightRequestProperty, new Binding("Value", BindingMode.TwoWay, source:heightSlider));
 			bubble.SetBinding(VectorSpeechBubble.HasShadowProperty, new Binding("IsToggled", BindingMode.TwoWay, source:shadowSwitch));
+
+			borderWidthLabel.SetBinding(Label.TextProperty, new Binding("Value", BindingMode.OneWay, source:borderWidthSlider, stringFormat:"{0:0.0}"));
+			cornerRadiusLabel.SetBinding(Label.TextProperty, new Binding("Value", BindingMode.OneWay, source:cornerRadiusSlider, stringFormat:"{0:0.0}"));
+			heightLabel.SetBinding(Label.TextProperty, new Binding("Value", BindingMode.OneWay, source:heightSlider));
+			widthLabel.SetBinding(Label.TextProperty, new Binding("Value", BindingMode.OneWay, source:widthSlider));
 		}
 	}
 }

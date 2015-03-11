@@ -49,9 +49,32 @@ namespace DNA.XForms.iOS.Views
 
 			Console.WriteLine("VectorSpeechBubbleUIView: DrawSpeechBubbleAroundRect");
 
+			bool hasUpArrow = arrowDirection.IsUp();
+			bool hasDownArrow = arrowDirection.IsDown();
+			bool hasLeftArrow = arrowDirection.IsLeft();
+			bool hasRightArrow = arrowDirection.IsRight();
+
+			float boxWidth = (float)rect.Width - (hasLeftArrow ? arrowHeight : 0f) - (hasRightArrow ? arrowHeight : 0f); 
+			float boxHeight = (float)rect.Height - (hasUpArrow ? arrowHeight : 0f) - (hasDownArrow ? arrowHeight : 0f); 
+
+			if (boxWidth < 0f) {
+				System.Diagnostics.Debug.Fail("Not enough space for the left and/or right arrows: funky rendering is likely!");
+			}
+			if (boxHeight < 0f) {
+				System.Diagnostics.Debug.Fail("Not enough space for the top and/or bottom arrows: funky rendering is likely!");
+			}
+
 			bool useGradient = true;
 			if (fillColor == gradientFillColor || gradientFillColor == null) {
 				useGradient = false;
+			}
+
+			// Adjust the corner radius to prevent strange things happening when the width/height of the control is very small
+			if (cornerRadius > (boxWidth - arrowWidth)/2f) {
+				cornerRadius = (boxWidth - arrowWidth)/2f;
+			}
+			if (cornerRadius > (boxHeight - arrowWidth)/2f) {
+				cornerRadius = (boxHeight - arrowWidth)/2f;
 			}
 
 			// Adjust the arrow offset to be within acceptable bounds
@@ -68,6 +91,7 @@ namespace DNA.XForms.iOS.Views
 				borderWidth = (float)rect.Height;
 
 			// Reduce the arrow width if there is not enough space to render it
+			// TODO: This doesn't seem to have any effect
 			if (arrowDirection.IsLeft () || arrowDirection.IsRight ()) {
 				if (arrowWidth > rect.Height)
 					arrowWidth = (float)rect.Height;
@@ -78,11 +102,6 @@ namespace DNA.XForms.iOS.Views
 			}
 
 			using (var context = UIGraphics.GetCurrentContext ()) {
-
-				bool hasUpArrow = arrowDirection.IsUp();
-				bool hasDownArrow = arrowDirection.IsDown();
-				bool hasLeftArrow = arrowDirection.IsLeft();
-				bool hasRightArrow = arrowDirection.IsRight();
 
 				context.SetLineJoin (CGLineJoin.Round);
 				context.SetLineWidth (borderWidth);
@@ -117,12 +136,42 @@ namespace DNA.XForms.iOS.Views
 				// Starts at top left corner
 				path.MoveToPoint (leftX + cornerRadius, topY);
 
+				// Determine offset for the arrow position based on whether its left, center, or right, and the ArrowOffset property
+				nfloat arrowOffsetX = 0f;
+				nfloat arrowOffsetY = 0f;
+
+				if (arrowDirection == VectorSpeechBubble.ArrowDirections.UpLeft || arrowDirection == VectorSpeechBubble.ArrowDirections.DownLeft) {
+					arrowOffsetX = (nfloat)(-1 * ((rect.Width / 2f) - midArrowWidth - cornerRadius - 4f)); // Move the up/down arrow to the left corner
+					// Items on the left shouldn't be right of the midline
+					if (arrowOffsetX > 0f)
+						arrowOffsetX = 0f;
+				}
+				if (arrowDirection == VectorSpeechBubble.ArrowDirections.UpRight || arrowDirection == VectorSpeechBubble.ArrowDirections.DownRight) {
+					arrowOffsetX = (nfloat)((rect.Width / 2f) - midArrowWidth - cornerRadius - 4f); 		// Move the up/down arrow to the right corner
+					// Items on the right shouldn't be left of the midline
+					if (arrowOffsetX < 0f)
+						arrowOffsetX = 0f;
+				}
+				if (arrowDirection == VectorSpeechBubble.ArrowDirections.LeftTop || arrowDirection == VectorSpeechBubble.ArrowDirections.RightTop) {
+					arrowOffsetY = (nfloat)(-1 * ((rect.Height / 2f) - midArrowWidth - cornerRadius - 4f)); // Move the left/tight arrow to the top corner
+					// Items on the top shouldn't be below the midline
+					if (arrowOffsetY > 0f)
+						arrowOffsetY = 0f;
+				}
+				if (arrowDirection == VectorSpeechBubble.ArrowDirections.LeftBottom || arrowDirection == VectorSpeechBubble.ArrowDirections.RightBottom) {
+					arrowOffsetY = (nfloat)((rect.Height / 2f) - midArrowWidth - cornerRadius - 4f); 		// Move the up/down arrow to the bottom corner
+					// Items on the bottom shouldn't be above the midline
+					if (arrowOffsetY < 0f)
+						arrowOffsetY = 0f;
+				}
+
 				if (hasUpArrow) {
+
 					// Adds a line to where the arrow starts
-					path.AddLineToPoint ((nfloat)Math.Round(midX - midArrowWidth) + 0.5f, topY);
+					path.AddLineToPoint ((nfloat)Math.Round(midX - midArrowWidth) + 0.5f + arrowOffsetX, topY);
 					// Draws the arrow up, and then down again
-					path.AddLineToPoint (midX,  0.5f);
-					path.AddLineToPoint ((midX + midArrowWidth) + 0.5f, arrowHeight + 0.5f);
+					path.AddLineToPoint (midX + arrowOffsetX,  0.5f);
+					path.AddLineToPoint (midX + midArrowWidth + 0.5f + arrowOffsetX, arrowHeight + 0.5f);
 				}
 
 				// Top right corner
@@ -130,10 +179,10 @@ namespace DNA.XForms.iOS.Views
 
 				if (hasRightArrow) {
 					// Adds a line to where the arrow starts
-					path.AddLineToPoint (rightX, midY - midArrowWidth );
+					path.AddLineToPoint (rightX, midY - midArrowWidth + arrowOffsetY );
 					// Draws the arrow right, and then left again
-					path.AddLineToPoint (rightX + arrowHeight, midY);
-					path.AddLineToPoint (rightX, midY + midArrowWidth);
+					path.AddLineToPoint (rightX + arrowHeight, midY + arrowOffsetY);
+					path.AddLineToPoint (rightX, midY + midArrowWidth + arrowOffsetY);
 				}
 
 				// To Bottom right corner (curling towards bottom left corner)
@@ -141,11 +190,11 @@ namespace DNA.XForms.iOS.Views
 
 				if (hasDownArrow) {
 					// Adds a line to where the arrow starts
-					path.AddLineToPoint (midX + midArrowWidth, bottomY);
+					path.AddLineToPoint (midX + midArrowWidth + arrowOffsetX, bottomY);
 
 					// Draws the arrow up, and then down again
-					path.AddLineToPoint (midX, bottomY + arrowHeight);
-					path.AddLineToPoint (midX - midArrowWidth, bottomY);
+					path.AddLineToPoint (midX + arrowOffsetX, bottomY + arrowHeight);
+					path.AddLineToPoint (midX - midArrowWidth + arrowOffsetX, bottomY);
 				}
 
 				// To bottom left corner (curling up in direction of top left corner)
@@ -153,10 +202,10 @@ namespace DNA.XForms.iOS.Views
 
 				if (hasLeftArrow) {
 					// Adds a line to where the arrow starts
-					path.AddLineToPoint (leftX, midY + midArrowWidth );
+					path.AddLineToPoint (leftX, midY + midArrowWidth + arrowOffsetY );
 					// Draws the arrow right, and then left again
-					path.AddLineToPoint (leftX - arrowHeight, midY);
-					path.AddLineToPoint (leftX, midY - midArrowWidth);
+					path.AddLineToPoint (leftX - arrowHeight, midY + arrowOffsetY);
+					path.AddLineToPoint (leftX, midY - midArrowWidth + arrowOffsetY);
 				}
 
 				// To top left corner (curling in direction of top right corner)
