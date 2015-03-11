@@ -16,8 +16,9 @@ namespace DNA.XForms.Sample
 				BorderColor = Color.White,
 				BorderWidth = 4d,
 				Padding = new Thickness(20,20,20,20),	// TODO: Auto calculate padding based on the arrow direction and size.  This padding should be in addition to
-				BackgroundColor = Color.Default, 		// TODO: This should be the default but its black for some reason
-				// HasShadow = true						// TODO
+				HasShadow = true,
+				HorizontalOptions = LayoutOptions.Start,
+				VerticalOptions = LayoutOptions.Start,
 			};
 
 			var arrowDirectionPicker = new Picker { 
@@ -45,15 +46,28 @@ namespace DNA.XForms.Sample
 			borderColorPicker.SelectedColor = Color.Purple;
 
 			var borderWidthSlider = new Slider (0d, 100d, 4d) { HorizontalOptions = LayoutOptions.End, WidthRequest=150d };
-			var cornerRadiusSlider = new Slider (0d, 50d, 10d) { HorizontalOptions = LayoutOptions.EndAndExpand, WidthRequest=150d };
+			var cornerRadiusSlider = new Slider (0d, 50d, 10d) { HorizontalOptions = LayoutOptions.End, WidthRequest=150d };
+
+			var widthSlider = new Slider {
+				Minimum = 0d,
+				Maximum = Application.Current.MainPage.Width - 20d,
+				Value = Application.Current.MainPage.Width,
+				HorizontalOptions = LayoutOptions.End,
+				WidthRequest = 150d,
+			};
+			var heightSlider = new Slider {
+				Minimum = 0d,
+				Maximum = 300d,
+				Value = 50d,
+				HorizontalOptions = LayoutOptions.End,
+				WidthRequest = 150d,
+			};
 
 			this.Content = new ScrollView {
 				Content = new StackLayout {
 					Padding = new Thickness(4d,4d,4d,4d),
 					Spacing = 4d,
 					Children = {
-						bubble,
-						new BoxView { HeightRequest = 20d }, // For some additional spacing
 						new StackLayout {
 							Orientation = StackOrientation.Horizontal,
 							Children = {
@@ -96,6 +110,22 @@ namespace DNA.XForms.Sample
 								cornerRadiusSlider,
 							}
 						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
+								new Label { Text = "Width", HorizontalOptions = LayoutOptions.FillAndExpand, YAlign = TextAlignment.Center },
+								widthSlider,
+							}
+						},
+						new StackLayout {
+							Orientation = StackOrientation.Horizontal,
+							Children = {
+								new Label { Text = "Height", HorizontalOptions = LayoutOptions.FillAndExpand, YAlign = TextAlignment.Center },
+								heightSlider,
+							}
+						},
+						new BoxView { HeightRequest = 20d }, // For some additional spacing
+						bubble,
 					},
 				}
 			};
@@ -105,6 +135,9 @@ namespace DNA.XForms.Sample
 			bubble.SetBinding(VectorSpeechBubble.BorderColorProperty, new Binding("SelectedColor", BindingMode.OneWay, source:borderColorPicker));
 			bubble.SetBinding(VectorSpeechBubble.BorderWidthProperty, new Binding("Value", BindingMode.TwoWay, source:borderWidthSlider));
 			bubble.SetBinding(VectorSpeechBubble.CornerRadiusProperty, new Binding("Value", BindingMode.TwoWay, source:cornerRadiusSlider));
+		
+			bubble.SetBinding(VectorSpeechBubble.WidthRequestProperty, new Binding("Value", BindingMode.TwoWay, source:widthSlider));
+			bubble.SetBinding(VectorSpeechBubble.HeightRequestProperty, new Binding("Value", BindingMode.TwoWay, source:heightSlider));
 		}
 	}
 }

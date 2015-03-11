@@ -20,7 +20,7 @@ namespace DNA.XForms.Sample
 				{ "button_back.png", new Thickness (13d, 2d, 6d, 2d) }, 
 			};
 
-			var cappedImage = new CappedImage (images.Last().Key, images.Last().Value);
+			var cappedImage = new CappedImage (images.First().Key, images.First().Value);
 			cappedImage.HorizontalOptions = LayoutOptions.Start;
 
 			var imagePicker = new Picker {
@@ -30,8 +30,8 @@ namespace DNA.XForms.Sample
 			foreach (var item in images) {
 				imagePicker.Items.Add (item.Key);
 			}
-			imagePicker.SelectedIndex = 2;
-			imagePicker.SelectedIndexChanged += (object sender, EventArgs e) => {
+			imagePicker.SelectedIndex = 0;
+			imagePicker.SelectedIndexChanged += (sender, e) => {
 				var selectedItem = imagePicker.Items[imagePicker.SelectedIndex];
 			
 				// Set these in a single call to prevent 2 layout calls (one of which will be a bit weird because the CapWidth won't match the ImageResource
@@ -65,7 +65,7 @@ namespace DNA.XForms.Sample
 			};
 
 			this.Content = new ScrollView {
-				Content = new StackLayout () {
+				Content = new StackLayout {
 					Padding = new Thickness (8d, 8d, 8d, 8d),
 					Spacing = 8d,
 					Children = {

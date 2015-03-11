@@ -55,7 +55,9 @@ namespace DNA.XForms.iOS.Renderer
 				e.PropertyName == VectorSpeechBubble.FillColorProperty.PropertyName ||
 				e.PropertyName == VectorSpeechBubble.GradientFillColorProperty.PropertyName ||
 				e.PropertyName == View.BackgroundColorProperty.PropertyName ||
-				e.PropertyName == VectorSpeechBubble.CornerRadiusProperty.PropertyName) {
+				e.PropertyName == VectorSpeechBubble.CornerRadiusProperty.PropertyName ||
+				e.PropertyName == View.WidthProperty.PropertyName || 
+				e.PropertyName == View.HeightProperty.PropertyName) {
 
 				var speechBubble = this.Element;
 				if (speechBubble != null) {
