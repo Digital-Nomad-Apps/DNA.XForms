@@ -8,30 +8,6 @@ namespace DNA.XForms
 	/// </summary>
 	public class VectorSpeechBubble : ContentView
 	{
-		#region Nested Types
-
-		public enum ArrowDirections {
-			None = 0,
-
-			UpLeft = 1,
-			UpCenter = 2,
-			UpRight = 3,
-
-			DownLeft = 4,
-			DownCenter = 5,
-			DownRight = 6,
-
-			LeftTop = 7,
-			LeftCenter = 8,
-			LeftBottom = 9,
-
-			RightTop = 10,
-			RightCenter = 11,
-			RightBottom = 12,
-		}
-
-		#endregion
-
 		#region BindableProperties
 
 		public static readonly BindableProperty ArrowDirectionProperty = BindableProperty.Create<VectorSpeechBubble, ArrowDirections>(p => p.ArrowDirection, ArrowDirections.DownRight);
@@ -113,7 +89,7 @@ namespace DNA.XForms
 
 		public bool HasShadow {
 			get { return (bool)base.GetValue (HasShadowProperty); } 
-			set { base.SetValue (IsTypingProperty, value); }
+			set { base.SetValue (HasShadowProperty, value); }
 		}
 
 		#endregion
@@ -166,27 +142,6 @@ namespace DNA.XForms
 		}
 	}
 
-	public static class ArrowDirectionsExtensions {
-		public static bool IsUp(this VectorSpeechBubble.ArrowDirections direction) {
-			return (direction == VectorSpeechBubble.ArrowDirections.UpLeft ||
-				direction == VectorSpeechBubble.ArrowDirections.UpCenter ||
-				direction == VectorSpeechBubble.ArrowDirections.UpRight);
-		}
-		public static bool IsDown(this VectorSpeechBubble.ArrowDirections direction) {
-			return (direction == VectorSpeechBubble.ArrowDirections.DownLeft ||
-				direction == VectorSpeechBubble.ArrowDirections.DownCenter ||
-				direction == VectorSpeechBubble.ArrowDirections.DownRight);
-		}
-		public static bool IsLeft(this VectorSpeechBubble.ArrowDirections direction) {
-			return (direction == VectorSpeechBubble.ArrowDirections.LeftTop ||
-				direction == VectorSpeechBubble.ArrowDirections.LeftCenter ||
-				direction == VectorSpeechBubble.ArrowDirections.LeftBottom);
-		}
-		public static bool IsRight(this VectorSpeechBubble.ArrowDirections direction) {
-			return (direction == VectorSpeechBubble.ArrowDirections.RightTop ||
-				direction == VectorSpeechBubble.ArrowDirections.RightCenter ||
-				direction == VectorSpeechBubble.ArrowDirections.RightBottom);
-		}
-	}
+
 }
 

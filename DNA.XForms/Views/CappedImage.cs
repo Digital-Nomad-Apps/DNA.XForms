@@ -7,8 +7,12 @@ namespace DNA.XForms
 	/// In iOS, we specify the "caps" in code (the number of pixels on the top, left, right, and bottom that are NOT scaled)
 	/// In Android, we use a special image format that contains a single-pixel black lineon each edge which defines the caps
 	/// </summary>
+	/// <remarks>
+	/// This is largely based on the work done here (just adapted for Xamarin.Forms)
+	/// https://developer.xamarin.com/samples/monotouch/BubbleCell/
+	/// </remarks>
 	public class CappedImage : Image
-	{
+	{ 
 		#region BindableProperty Definitions
 
 		public static readonly BindableProperty ImageResourceProperty = BindableProperty.Create<CappedImage, string>(p => p.ImageResource, "");

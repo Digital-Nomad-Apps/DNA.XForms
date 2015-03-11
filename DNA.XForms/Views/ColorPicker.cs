@@ -35,7 +35,6 @@ namespace DNA.XForms.Sample
 			{ "White", Color.White }, 
 			{ "Yellow", Color.Yellow },
 			{ "Custom Blue", Color.FromRgb(89, 117, 158) },
-			{ "Custom LightBlue", Color.FromRgb (89, 117, 158) }, 
 		};
 
 		#region BindableProperty Definitions

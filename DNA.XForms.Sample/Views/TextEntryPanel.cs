@@ -19,6 +19,13 @@ namespace DNA.XForms.Sample
 			set { base.SetValue (PlaceholderProperty, value); }
 		}
 
+		public class TextEnteredEventArgs { public string Text {get;set;}}
+		public event EventHandler<TextEnteredEventArgs> TextEntered;
+
+		public event EventHandler Focused;
+
+		private Entry _textEntry;
+
 		/// <summary>
 		/// A control containing an Entry control and a customizable "Enter" Button
 		/// </summary>
@@ -32,7 +39,7 @@ namespace DNA.XForms.Sample
 				HeightRequest = 30,
 				IsEnabled = false, // Until some text is entered
 			};
-			var textEntry = new Entry { 
+			_textEntry = new Entry { 
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 				VerticalOptions = LayoutOptions.Center,
 				Keyboard = Keyboard.Chat,
@@ -40,31 +47,27 @@ namespace DNA.XForms.Sample
 				// Font = Font.SystemFontOfSize(NamedSize.Small), // Not supported in default Entry control
 				HeightRequest = 30,
 			};
-			textEntry.TextChanged += (object sender, TextChangedEventArgs e) => {
-				enterButton.IsEnabled = !string.IsNullOrEmpty(textEntry.Text);
+
+			/*
+			_textEntry.Focused += (sender, e) => {
+				if (this.Focused != null) // Bubble the event up to the parent view
+			-		this.Focused (this, new FocusEventArgs (this, true));
 			};
-			textEntry.Completed += (object sender, EventArgs e) => {
-				
-				// TODO: Raise event to indicate that text was "Entered"
-
-				textEntry.Text = "";
-			};;
-
-
-			enterButton.Clicked += (object sender, EventArgs e) => {
-				// TODO: Raise event to indicate that text was "Entered"
-
-				textEntry.Text = "";
-				textEntry.Unfocus();  // dismisses the keyboard
+			*/
+	
+			_textEntry.TextChanged += (sender, e) => {
+				enterButton.IsEnabled = !string.IsNullOrEmpty(_textEntry.Text);
 			};
+			_textEntry.Completed += (sender, e) => OnTextEntered();
+			enterButton.Clicked += (sender, e) => OnTextEntered();
 
 			var textEntryPanel = new StackLayout { 
 				Padding = new Thickness (4),
 				Orientation = StackOrientation.Horizontal,
 				HorizontalOptions = LayoutOptions.Fill,
-				BackgroundColor = Color.Gray.MultiplyAlpha (0.6d),
+				BackgroundColor = ColorHelper.MyLightGray.ToFormsColor().MultiplyAlpha (0.9d), // TODO: Make this configurable
 				Children = {
-					textEntry,
+					_textEntry,
 					enterButton,
 				},
 			};
@@ -73,7 +76,18 @@ namespace DNA.XForms.Sample
 
 			// Add Bindings
 			enterButton.SetBinding(Button.TextProperty, new Binding("EnterButtonText", BindingMode.TwoWay, source:this));
-			textEntry.SetBinding(Entry.PlaceholderProperty, new Binding("Placeholder", BindingMode.TwoWay, source:this));
+			_textEntry.SetBinding(Entry.PlaceholderProperty, new Binding("Placeholder", BindingMode.TwoWay, source:this));
+		}
+
+		private void OnTextEntered() {
+			var eventArgs = new TextEnteredEventArgs { Text = _textEntry.Text };
+			_textEntry.Text =  "";
+
+			// Raise event to indicate that text was "Entered"
+			if (this.TextEntered != null) {
+				this.TextEntered(this, eventArgs);
+			}
+			_textEntry.Unfocus ();
 		}
 	}
 }

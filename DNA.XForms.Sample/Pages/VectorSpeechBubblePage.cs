@@ -12,7 +12,7 @@ namespace DNA.XForms.Sample
 
 			var bubble = new VectorSpeechBubble {
 				Text = "Hello there. Do you have a minute to talk?",
-				ArrowDirection = VectorSpeechBubble.ArrowDirections.RightBottom,
+				ArrowDirection = ArrowDirections.RightBottom,
 				BorderColor = Color.White,
 				BorderWidth = 4d,
 				// Padding = new Thickness(8d,8d,8d,8d),	// TODO: Auto calculate padding based on the arrow direction and size.  This padding should be in addition to
@@ -25,14 +25,14 @@ namespace DNA.XForms.Sample
 				HorizontalOptions = LayoutOptions.End, 
 				WidthRequest=150d,
 			};
-			foreach (var direction in System.Enum.GetNames(typeof(VectorSpeechBubble.ArrowDirections))) {
+			foreach (var direction in System.Enum.GetNames(typeof(ArrowDirections))) {
 				arrowDirectionPicker.Items.Add (direction);
 			}
-			arrowDirectionPicker.SelectedIndex = arrowDirectionPicker.Items.IndexOf (VectorSpeechBubble.ArrowDirections.RightBottom.ToString());
+			arrowDirectionPicker.SelectedIndex = arrowDirectionPicker.Items.IndexOf (ArrowDirections.RightBottom.ToString());
 
 			arrowDirectionPicker.SelectedIndexChanged += (object sender, System.EventArgs e) => {
 				var selectedValue = arrowDirectionPicker.Items[arrowDirectionPicker.SelectedIndex];
-				var direction = (VectorSpeechBubble.ArrowDirections)System.Enum.Parse(typeof(VectorSpeechBubble.ArrowDirections), selectedValue);
+				var direction = (ArrowDirections)System.Enum.Parse(typeof(ArrowDirections), selectedValue);
 				bubble.ArrowDirection = direction;
 			};
 

@@ -6,7 +6,7 @@ namespace DNA.XForms.iOS.Views
 {
 	public partial class VectorSpeechBubbleUIView : UIView
 	{
-		public VectorSpeechBubble.ArrowDirections ArrowDirection { get; set;}
+		public ArrowDirections ArrowDirection { get; set;}
 		public UIColor FillColor { get; set;}
 		public UIColor GradientFillColor { get; set;}
 		public UIColor BorderColor { get; set;}
@@ -34,7 +34,7 @@ namespace DNA.XForms.iOS.Views
 		/// <param name = "triangleHeight"></param>
 		/// <param name = "triangleWidth"></param>
 		public static void DrawSpeechBubbleAroundRect(CGRect rect, 
-			VectorSpeechBubble.ArrowDirections arrowDirection, 
+			ArrowDirections arrowDirection, 
 			UIColor borderColor, 
 			UIColor fillColor, 
 			UIColor gradientFillColor, 
@@ -140,25 +140,25 @@ namespace DNA.XForms.iOS.Views
 				nfloat arrowOffsetX = 0f;
 				nfloat arrowOffsetY = 0f;
 
-				if (arrowDirection == VectorSpeechBubble.ArrowDirections.UpLeft || arrowDirection == VectorSpeechBubble.ArrowDirections.DownLeft) {
+				if (arrowDirection == ArrowDirections.UpLeft || arrowDirection == ArrowDirections.DownLeft) {
 					arrowOffsetX = (nfloat)(-1 * ((rect.Width / 2f) - midArrowWidth - cornerRadius - 4f)); // Move the up/down arrow to the left corner
 					// Items on the left shouldn't be right of the midline
 					if (arrowOffsetX > 0f)
 						arrowOffsetX = 0f;
 				}
-				if (arrowDirection == VectorSpeechBubble.ArrowDirections.UpRight || arrowDirection == VectorSpeechBubble.ArrowDirections.DownRight) {
+				if (arrowDirection == ArrowDirections.UpRight || arrowDirection == ArrowDirections.DownRight) {
 					arrowOffsetX = (nfloat)((rect.Width / 2f) - midArrowWidth - cornerRadius - 4f); 		// Move the up/down arrow to the right corner
 					// Items on the right shouldn't be left of the midline
 					if (arrowOffsetX < 0f)
 						arrowOffsetX = 0f;
 				}
-				if (arrowDirection == VectorSpeechBubble.ArrowDirections.LeftTop || arrowDirection == VectorSpeechBubble.ArrowDirections.RightTop) {
+				if (arrowDirection == ArrowDirections.LeftTop || arrowDirection == ArrowDirections.RightTop) {
 					arrowOffsetY = (nfloat)(-1 * ((rect.Height / 2f) - midArrowWidth - cornerRadius - 4f)); // Move the left/tight arrow to the top corner
 					// Items on the top shouldn't be below the midline
 					if (arrowOffsetY > 0f)
 						arrowOffsetY = 0f;
 				}
-				if (arrowDirection == VectorSpeechBubble.ArrowDirections.LeftBottom || arrowDirection == VectorSpeechBubble.ArrowDirections.RightBottom) {
+				if (arrowDirection == ArrowDirections.LeftBottom || arrowDirection == ArrowDirections.RightBottom) {
 					arrowOffsetY = (nfloat)((rect.Height / 2f) - midArrowWidth - cornerRadius - 4f); 		// Move the up/down arrow to the bottom corner
 					// Items on the bottom shouldn't be above the midline
 					if (arrowOffsetY < 0f)

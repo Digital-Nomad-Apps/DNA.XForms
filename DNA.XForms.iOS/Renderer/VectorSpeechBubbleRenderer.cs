@@ -23,8 +23,10 @@ namespace DNA.XForms.iOS.Renderer
 				{
 					speechBubbleView = new Views.VectorSpeechBubbleUIView();
 					SetViewProperties(speechBubble);
+					speechBubbleView.Layer.SetShadowPropertiesOnLayer(speechBubble.HasShadow);
 
 					SetNativeControl (speechBubbleView);
+
 
 					// Speech bubble should be behind any of the Content views
 					this.SendSubviewToBack(speechBubbleView);
